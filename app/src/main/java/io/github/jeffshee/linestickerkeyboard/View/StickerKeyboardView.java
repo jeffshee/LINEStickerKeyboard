@@ -53,13 +53,13 @@ public class StickerKeyboardView extends LinearLayout {
         LayoutInflater.from(ctx).inflate(R.layout.keyboard_layout, this, true);
 
         // History Pack
-        historyPackView = new HistoryPackView(ctx, getHistoryFromPref());
+        historyPackView = new HistoryPackView(context, getHistoryFromPref());
         views.add(historyPackView);
 
         // Sticker Pack
         loadDummyStickers();
         for (StickerPack stickerPack : stickerPacks) {
-            views.add(new StickerPackView(ctx, stickerPack));
+            views.add(new StickerPackView(context, stickerPack));
         }
 
         // TabLayout

@@ -22,7 +22,8 @@ public class BasePackView extends LinearLayout {
         setOrientation(LinearLayout.HORIZONTAL);
         setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
-        LayoutInflater.from(context).inflate(R.layout.view_pack, this, true);
+        ContextThemeWrapper ctx = new ContextThemeWrapper(context, R.style.MyTheme);
+        LayoutInflater.from(ctx).inflate(R.layout.view_pack, this, true);
         recyclerView = findViewById(R.id.recycler);
 
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
