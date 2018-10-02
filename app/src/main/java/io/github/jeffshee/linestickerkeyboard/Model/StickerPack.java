@@ -8,7 +8,7 @@ public class StickerPack {
         this.count = count;
     }
 
-    public int getId() {
+    public int getFirstId() {
         return id;
     }
 

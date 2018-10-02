@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -8,14 +9,31 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="216dp"
-        android:background="@color/colorIMBackground"/>
+        android:layout_height="232dp"
+        android:background="@color/colorIMBackground" />
 
-
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tabLayout"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@color/colorIMTabLayout"/>
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:background="@color/colorIMTabLayout">
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/baseline_settings_white_36"
+            tools:ignore="ContentDescription" />
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            app:tabIndicatorColor="@color/colorIMTabIndicator"
+            app:tabMaxWidth="60dp" />
+    </LinearLayout>
 
 </LinearLayout>

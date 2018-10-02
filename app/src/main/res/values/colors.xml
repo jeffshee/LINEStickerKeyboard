@@ -5,6 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorLoading">#BDBDBD</color>
     <color name="colorError">#F44336</color>
-    <color name="colorIMBackground">#424242</color>
-    <color name="colorIMTabLayout">#212121</color>
+    <color name="colorIMBackground">#36393F</color>
+    <color name="colorIMTabLayout">#36393F</color>
+    <color name="colorIMTabIndicator">#7289da</color>
 </resources>

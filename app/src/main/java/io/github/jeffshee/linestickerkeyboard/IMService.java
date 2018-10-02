@@ -34,13 +34,13 @@ public class IMService extends InputMethodService {
     private static final String MIME_TYPE_PNG = "image/png";
     private static final String URL_F = "https://sdl-stickershop.line.naver.jp/stickershop/v1/sticker/";
     private static final String URL_B = "/android/sticker.png;compress=true";
+    private StickerKeyboardView stickerKeyboardView;
 
     /* ImageKeyboard Google Samples
      * https://github.com/googlesamples/android-CommitContentSampleIME/
      */
-
-    public void postSticker(final int id) {
-        if (isCommitContentSupported(MIME_TYPE_PNG)) {
+    public void postSticker(final int id, boolean saveHistory) {
+        if (isCommitContentSupported()) {
             File imagesDir = new File(getFilesDir(), "images");
             if (imagesDir.mkdirs())
                 Log.d("Service", "Dir created successfully");
@@ -67,7 +67,7 @@ public class IMService extends InputMethodService {
                                     outputStream.write(buffer, 0, numRead);
                                 }
                                 Log.d("Service", String.valueOf(id) + " downloaded");
-                                doCommitContent(String.valueOf(id), MIME_TYPE_PNG, outputFile);
+                                doCommitContent(String.valueOf(id), outputFile);
                             } finally {
                                 if (outputStream != null) {
                                     outputStream.flush();
@@ -84,12 +84,13 @@ public class IMService extends InputMethodService {
                     }
                 }
             }).start();
+            if (saveHistory) stickerKeyboardView.saveNewItemToHistory(id);
         } else {
             Toast.makeText(this, "Not supported", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private boolean isCommitContentSupported(String mimeType) {
+    private boolean isCommitContentSupported() {
         final EditorInfo editorInfo = getCurrentInputEditorInfo();
         if (editorInfo == null) {
             return false;
@@ -102,14 +103,14 @@ public class IMService extends InputMethodService {
 
         final String[] supportedMimeTypes = EditorInfoCompat.getContentMimeTypes(editorInfo);
         for (String supportedMimeType : supportedMimeTypes) {
-            if (ClipDescription.compareMimeTypes(mimeType, supportedMimeType)) {
+            if (ClipDescription.compareMimeTypes(MIME_TYPE_PNG, supportedMimeType)) {
                 return true;
             }
         }
         return false;
     }
 
-    private void doCommitContent(@NonNull String description, @NonNull String mimeType,
+    private void doCommitContent(@NonNull String description,
                                  @NonNull File file) {
         final EditorInfo editorInfo = getCurrentInputEditorInfo();
         final Uri contentUri = FileProvider.getUriForFile(this, AUTHORITY, file);
@@ -129,8 +130,7 @@ public class IMService extends InputMethodService {
 
         final InputContentInfoCompat inputContentInfoCompat = new InputContentInfoCompat(
                 contentUri,
-                new ClipDescription(description, new String[]{mimeType}),
-                null);
+                new ClipDescription(description, new String[]{MIME_TYPE_PNG}), null);
         InputConnectionCompat.commitContent(
                 getCurrentInputConnection(), getCurrentInputEditorInfo(), inputContentInfoCompat,
                 flag, null);
@@ -138,7 +138,8 @@ public class IMService extends InputMethodService {
 
     @Override
     public View onCreateInputView() {
-        return new StickerKeyboardView(this);
+        stickerKeyboardView = new StickerKeyboardView(this);
+        return stickerKeyboardView;
     }
 }
 
