@@ -15,25 +15,33 @@ import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 
 import io.github.jeffshee.linestickerkeyboard.Adapter.StickerViewPagerAdapter;
+import io.github.jeffshee.linestickerkeyboard.IMService;
 import io.github.jeffshee.linestickerkeyboard.Model.HistoryPack;
 import io.github.jeffshee.linestickerkeyboard.Model.StickerPack;
 import io.github.jeffshee.linestickerkeyboard.R;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
+/* Summary
+    IMService <-> StickerKeyboardView -- [ HistoryPackView <- HistoryAdapter <- HistoryPack
+             StickerViewPagerAdapter -^  [ StickerPackView <- StickerAdapter <- StickerPack
+                                         [      ``                  ``              ``
+ */
 public class StickerKeyboardView extends LinearLayout {
     private static final String URL_F = "https://sdl-stickershop.line.naver.jp/stickershop/v1/sticker/";
     private static final String URL_B = "/android/sticker.png;compress=true";
     private static final String SHARED_PREF = "linestickerkeyboard.pref";
-    private static final String KEY = "linestickerkeyboard.pref.history";
-    ArrayList<StickerPack> stickerPacks = new ArrayList<>();
+    private static final String KEY_HISTORY = "linestickerkeyboard.pref.history";
+    private static final String KEY_STICKERS = "linestickerkeyboard.pref.stickers";
     ArrayList<View> views = new ArrayList<>();
     HistoryPackView historyPackView;
     private HistoryPack historyPack;
+    private ArrayList<StickerPack> stickerPacks;
     private SharedPreferences sharedPreferences;
     private Gson gson = new Gson();
 
@@ -53,11 +61,12 @@ public class StickerKeyboardView extends LinearLayout {
         LayoutInflater.from(ctx).inflate(R.layout.keyboard_layout, this, true);
 
         // History Pack
-        historyPackView = new HistoryPackView(context, getHistoryFromPref());
+        getHistoryFromPref();
+        historyPackView = new HistoryPackView(context, historyPack);
         views.add(historyPackView);
 
         // Sticker Pack
-        loadDummyStickers();
+        getStickerPacksFromPref();
         for (StickerPack stickerPack : stickerPacks) {
             views.add(new StickerPackView(context, stickerPack));
         }
@@ -87,7 +96,9 @@ public class StickerKeyboardView extends LinearLayout {
         }
 
         // Default Tab
-        if (views.size() > 1) {
+        if (historyPack.size() != 0) {
+            viewPager.setCurrentItem(0);
+        } else if (stickerPacks.size() > 0) {
             viewPager.setCurrentItem(1);
         }
 
@@ -95,7 +106,9 @@ public class StickerKeyboardView extends LinearLayout {
         button.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: Setting OnClick
+                if (context instanceof IMService) {
+                    ((IMService) context).showSettingDialog();
+                }
             }
         });
         button.setOnLongClickListener(new OnLongClickListener() {
@@ -110,21 +123,32 @@ public class StickerKeyboardView extends LinearLayout {
         });
     }
 
-    private HistoryPack getHistoryFromPref() {
-        String json = sharedPreferences.getString(KEY, "");
+    private void getStickerPacksFromPref(){
+        String json = sharedPreferences.getString(KEY_STICKERS, "");
+        if(json.equals("")){
+            stickerPacks = new ArrayList<>();
+            // For Debug Purpose Only
+            loadDummyStickers();
+        }else{
+            stickerPacks = gson.fromJson(sharedPreferences.getString(KEY_STICKERS, null),
+                    new TypeToken<ArrayList<StickerPack>>(){}.getType());
+        }
+    }
+
+    private void getHistoryFromPref() {
+        String json = sharedPreferences.getString(KEY_HISTORY, "");
         if (json.equals("")) {
             historyPack = new HistoryPack(new ArrayList<Integer>());
         } else {
-            historyPack = gson.fromJson(sharedPreferences.getString(KEY, null),
+            historyPack = gson.fromJson(sharedPreferences.getString(KEY_HISTORY, null),
                     HistoryPack.class);
         }
-        return historyPack;
     }
 
     public void saveNewItemToHistory(int id) {
         historyPack.add(id);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(KEY, gson.toJson(historyPack));
+        editor.putString(KEY_HISTORY, gson.toJson(historyPack));
         editor.apply();
         historyPackView.postUpdate(historyPack);
     }
@@ -141,6 +165,10 @@ public class StickerKeyboardView extends LinearLayout {
         stickerPacks.add(new StickerPack(50231454, 24));
         stickerPacks.add(new StickerPack(30889672, 24));
         stickerPacks.add(new StickerPack(7115472, 24));
+        // Save Dummy Stickers
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(KEY_STICKERS, gson.toJson(stickerPacks));
+        editor.apply();
     }
 }
 

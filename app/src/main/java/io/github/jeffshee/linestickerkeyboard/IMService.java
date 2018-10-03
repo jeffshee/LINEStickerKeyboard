@@ -1,7 +1,9 @@
 
 package io.github.jeffshee.linestickerkeyboard;
 
+import android.app.AlertDialog;
 import android.content.ClipDescription;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.inputmethodservice.InputMethodService;
 import android.net.Uri;
@@ -13,8 +15,11 @@ import android.support.v13.view.inputmethod.InputContentInfoCompat;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import java.io.File;
@@ -141,5 +146,49 @@ public class IMService extends InputMethodService {
         stickerKeyboardView = new StickerKeyboardView(this);
         return stickerKeyboardView;
     }
+
+    /*
+        https://stackoverflow.com/questions/3494476/android-ime-how-to-show-a-pop-up-dialog
+        I JUST WANT TO SHOW A DIALOG ON MY KEYBOARD WHY IT IS SO F*KING DIFFICULT LOL??!? T^T
+        https://stackoverflow.com/questions/51906586/display-dialog-from-input-method-service-in-android-9-android-pie
+        NOTE: Might causing bug on Android 9
+        TODO: Confirmation Required
+     */
+    public void showSettingDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.app_name)
+                .setItems(R.array.settings_array, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch (i) {
+                            case 0:
+                                Intent intent = new Intent(IMService.this, MainActivity.class);
+                                IMService.this.startActivity(intent);
+                                break;
+                            case 1:
+                                InputMethodManager im = (InputMethodManager) IMService.this.getSystemService(INPUT_METHOD_SERVICE);
+                                if (im != null) {
+                                    im.showInputMethodPicker();
+                                }
+                                break;
+                        }
+                    }
+                }).setIcon(R.mipmap.ic_launcher);
+        AlertDialog dialog = builder.create();
+
+        // Workaround for IMService + AlertDialog
+        Window window = dialog.getWindow();
+        WindowManager.LayoutParams lp;
+        if (window != null) {
+            lp = window.getAttributes();
+            lp.token = stickerKeyboardView.getWindowToken();
+            lp.type = WindowManager.LayoutParams.TYPE_APPLICATION_ATTACHED_DIALOG;
+            window.setAttributes(lp);
+            window.addFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+            dialog.show();
+        }
+        //
+    }
+
 }
 

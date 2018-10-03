@@ -8,4 +8,8 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="loading">LOADING</string>
     <string name="error">ERROR</string>
+    <string-array name="settings_array">
+        <item>Launch Menu</item>
+        <item>Switch Keyboard</item>
+    </string-array>
 </resources>
