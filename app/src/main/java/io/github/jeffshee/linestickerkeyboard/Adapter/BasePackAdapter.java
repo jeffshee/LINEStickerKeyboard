@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -68,7 +69,7 @@ public abstract class BasePackAdapter extends RecyclerView.Adapter {
         stickerViewHolder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (service != null){
+                if (service != null) {
                     service.postSticker((int) stickerViewHolder.itemView.getTag(), saveHistory());
                 }
             }
@@ -76,7 +77,9 @@ public abstract class BasePackAdapter extends RecyclerView.Adapter {
     }
 
     protected abstract String getPreviewUrl(int position);
+
     protected abstract int getIdForTag(int position);
+
     protected abstract boolean saveHistory();
 
     // ViewHolder
@@ -86,7 +89,7 @@ public abstract class BasePackAdapter extends RecyclerView.Adapter {
 
         StickerViewHolder(View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.imageView);
+            imageView = itemView.findViewById(R.id.textView);
             textView = itemView.findViewById(R.id.status);
         }
     }

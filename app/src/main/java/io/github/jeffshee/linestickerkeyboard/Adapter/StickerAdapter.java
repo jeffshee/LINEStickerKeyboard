@@ -34,4 +34,8 @@ public class StickerAdapter extends BasePackAdapter {
         return true;
     }
 
+    public void update(StickerPack stickerPack) {
+        this.stickerPack = stickerPack;
+        notifyDataSetChanged();
+    }
 }

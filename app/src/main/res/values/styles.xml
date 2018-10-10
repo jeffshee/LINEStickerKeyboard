@@ -17,7 +17,7 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="MyTheme" parent="Theme.AppCompat.NoActionBar" >
+    <style name="MyTheme" parent="Theme.AppCompat" >
         <item name="colorPrimary">@color/md_deep_purple_600</item>
         <item name="colorPrimaryDark">@color/md_deep_purple_900</item>
         <item name="colorAccent">@color/md_pink_A200</item>

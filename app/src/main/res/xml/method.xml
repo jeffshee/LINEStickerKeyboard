@@ -1,4 +1,5 @@
 <input-method
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:settingsActivity="io.github.jeffshee.linestickerkeyboard.MainActivity"
     android:icon="@mipmap/ic_launcher">
 </input-method>

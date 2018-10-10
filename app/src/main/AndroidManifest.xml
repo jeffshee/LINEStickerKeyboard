@@ -23,6 +23,16 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".EditActivity"
+            android:label="@string/my_stickers">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+
+        </activity>
+
         <service
             android:name=".IMService"
             android:label="@string/app_name"
@@ -30,6 +40,7 @@
             <intent-filter>
                 <action android:name="android.view.InputMethod" />
             </intent-filter>
+
             <meta-data
                 android:name="android.view.im"
                 android:resource="@xml/method" />
@@ -44,6 +55,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
     </application>
 
 </manifest>

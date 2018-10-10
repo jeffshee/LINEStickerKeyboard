@@ -6,7 +6,7 @@ import io.github.jeffshee.linestickerkeyboard.Adapter.HistoryAdapter;
 import io.github.jeffshee.linestickerkeyboard.Model.HistoryPack;
 
 public class HistoryPackView extends BasePackView {
-    private HistoryAdapter adapter;
+    public HistoryAdapter adapter;
 
     public HistoryPackView(Context context) {
         super(context);
@@ -18,7 +18,4 @@ public class HistoryPackView extends BasePackView {
         recyclerView.setAdapter(adapter);
     }
 
-    public void postUpdate(HistoryPack historyPack) {
-        adapter.update(historyPack);
-    }
 }

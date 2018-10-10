@@ -35,4 +35,9 @@ public class StickerViewPagerAdapter extends PagerAdapter{
     public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
         return view == object;
     }
+
+    public void update(ArrayList<View> views) {
+        this.views = views;
+        notifyDataSetChanged();
+    }
 }

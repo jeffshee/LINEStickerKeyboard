@@ -89,7 +89,7 @@ public class IMService extends InputMethodService {
                     }
                 }
             }).start();
-            if (saveHistory) stickerKeyboardView.saveNewItemToHistory(id);
+            if (saveHistory) stickerKeyboardView.addNewItemToHistory(id);
         } else {
             Toast.makeText(this, "Not supported", Toast.LENGTH_SHORT).show();
         }
@@ -147,13 +147,19 @@ public class IMService extends InputMethodService {
         return stickerKeyboardView;
     }
 
+    @Override
+    public void onStartInput(EditorInfo attribute, boolean restarting) {
+
+        super.onStartInput(attribute, restarting);
+    }
+
     /*
-        https://stackoverflow.com/questions/3494476/android-ime-how-to-show-a-pop-up-dialog
-        I JUST WANT TO SHOW A DIALOG ON MY KEYBOARD WHY IT IS SO F*KING DIFFICULT LOL??!? T^T
-        https://stackoverflow.com/questions/51906586/display-dialog-from-input-method-service-in-android-9-android-pie
-        NOTE: Might causing bug on Android 9
-        TODO: Confirmation Required
-     */
+                https://stackoverflow.com/questions/3494476/android-ime-how-to-show-a-pop-up-dialog
+                I JUST WANT TO SHOW A DIALOG ON MY KEYBOARD WHY IT IS SO F*KING DIFFICULT LOL??!? T^T
+                https://stackoverflow.com/questions/51906586/display-dialog-from-input-method-service-in-android-9-android-pie
+                NOTE: Might causing bug on Android 9
+                TODO: Confirmation Required
+             */
     public void showSettingDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.app_name)

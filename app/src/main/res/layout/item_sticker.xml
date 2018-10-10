@@ -5,7 +5,7 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/textView"
         android:layout_width="@dimen/sticker_size"
         android:layout_height="@dimen/sticker_size"
         android:layout_marginBottom="8dp"
