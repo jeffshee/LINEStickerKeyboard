@@ -9,6 +9,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 
 import io.github.jeffshee.linestickerkeyboard.Model.HistoryPack;
+import io.github.jeffshee.linestickerkeyboard.Model.Sticker;
 import io.github.jeffshee.linestickerkeyboard.Model.StickerPack;
 
 public class SharedPrefHelper {
@@ -26,9 +27,9 @@ public class SharedPrefHelper {
         String json = sharedPreferences.getString(KEY_STICKERS, "");
         ArrayList<StickerPack> stickerPacks;
         if(json.equals("")){
-            // stickerPacks = new ArrayList<>();
+            stickerPacks = new ArrayList<>();
             // For Debug Purpose Only
-            stickerPacks = loadDummyStickers();
+            // stickerPacks = loadDummyStickers();
         }else{
             stickerPacks = gson.fromJson(sharedPreferences.getString(KEY_STICKERS, null),
                     new TypeToken<ArrayList<StickerPack>>(){}.getType());
@@ -40,7 +41,7 @@ public class SharedPrefHelper {
         String json = sharedPreferences.getString(KEY_HISTORY, "");
         HistoryPack historyPack;
         if (json.equals("")) {
-            historyPack = new HistoryPack(new ArrayList<Integer>());
+            historyPack = new HistoryPack(new ArrayList<Sticker>());
         } else {
             historyPack = gson.fromJson(sharedPreferences.getString(KEY_HISTORY, null),
                     HistoryPack.class);
@@ -48,6 +49,13 @@ public class SharedPrefHelper {
         return historyPack;
     }
 
+
+    public void addNewStickerPack(StickerPack stickerPack){
+        ArrayList<StickerPack> stickerPacks;
+        stickerPacks = getStickerPacksFromPref();
+        stickerPacks.add(stickerPack);
+        saveNewStickerPacks(stickerPacks);
+    }
 
     public void saveNewStickerPacks(ArrayList<StickerPack> stickerPacks){
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -63,17 +71,13 @@ public class SharedPrefHelper {
 
     private ArrayList<StickerPack> loadDummyStickers() {
         ArrayList<StickerPack> stickerPacks = new ArrayList<>();
-        stickerPacks.add(new StickerPack(6588224, 40));
-        stickerPacks.add(new StickerPack(3008851, 40));
-        stickerPacks.add(new StickerPack(6681024, 40));
-        stickerPacks.add(new StickerPack(8031396, 40));
-        stickerPacks.add(new StickerPack(13831750, 40));
-        stickerPacks.add(new StickerPack(56014, 40));
-        stickerPacks.add(new StickerPack(4235640, 40));
-        stickerPacks.add(new StickerPack(18346658, 40));
-        stickerPacks.add(new StickerPack(50231454, 24));
-        stickerPacks.add(new StickerPack(30889672, 24));
-        stickerPacks.add(new StickerPack(7115472, 24));
+        stickerPacks.add(new StickerPack(new Sticker(Sticker.Type.STATIC, 8031396), 40));
+        stickerPacks.add(new StickerPack(new Sticker(Sticker.Type.STATIC, 13831750), 40));
+        stickerPacks.add(new StickerPack(new Sticker(Sticker.Type.STATIC, 99649182), 40));
+
+        stickerPacks.add(new StickerPack(new Sticker(Sticker.Type.ANIMATED, 23789448), 24));
+        stickerPacks.add(new StickerPack(new Sticker(Sticker.Type.POPUP, 14867006), 24));
+
         // Save Dummy Stickers To Pref
         saveNewStickerPacks(stickerPacks);
         return stickerPacks;

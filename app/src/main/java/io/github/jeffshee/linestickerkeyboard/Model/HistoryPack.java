@@ -4,31 +4,39 @@ import java.util.ArrayList;
 
 public class HistoryPack {
     private static final int MAX_SIZE = 50;
-    private ArrayList<Integer> history;
+    private ArrayList<Sticker> stickers;
 
-    public HistoryPack(ArrayList<Integer> history) {
-        this.history = history;
+    public HistoryPack(ArrayList<Sticker> history) {
+        this.stickers = history;
     }
 
-    public void add(int id) {
-        for (int i = 0; i < history.size(); i++) {
-            if (id == history.get(i)) history.remove(i);
+    public void add(Sticker sticker) {
+        for (int i = 0; i < stickers.size(); i++) {
+            if (sticker.equal(stickers.get(i))) stickers.remove(i);
         }
-        history.add(0, id);
-        if (history.size() > MAX_SIZE) {
-            history.remove(MAX_SIZE);
+        stickers.add(0, sticker);
+        if (stickers.size() > MAX_SIZE) {
+            stickers.remove(MAX_SIZE);
         }
     }
 
-    public int getId(int index){
-        return history.get(index);
+    public int getId(int index) {
+        return stickers.get(index).getId();
+    }
+
+    public Sticker.Type getType(int index) {
+        return stickers.get(index).getType();
+    }
+
+    public Sticker getSticker(int index){
+        return stickers.get(index);
     }
 
     public void clear() {
-        history.clear();
+        stickers.clear();
     }
 
-    public int size(){
-        return history.size();
+    public int size() {
+        return stickers.size();
     }
 }

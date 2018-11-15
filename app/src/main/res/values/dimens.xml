@@ -6,4 +6,6 @@
     <dimen name="sticker_size">96dp</dimen>
     <dimen name="default_padding">8dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
+    <dimen name="item_offset_x">16dp</dimen>
+    <dimen name="item_offset_y">8dp</dimen>
 </resources>

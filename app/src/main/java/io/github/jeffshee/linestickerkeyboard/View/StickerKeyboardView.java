@@ -14,13 +14,16 @@ import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import io.github.jeffshee.linestickerkeyboard.Adapter.StickerViewPagerAdapter;
 import io.github.jeffshee.linestickerkeyboard.IMService;
 import io.github.jeffshee.linestickerkeyboard.Model.HistoryPack;
+import io.github.jeffshee.linestickerkeyboard.Model.Sticker;
 import io.github.jeffshee.linestickerkeyboard.Model.StickerPack;
 import io.github.jeffshee.linestickerkeyboard.R;
+import io.github.jeffshee.linestickerkeyboard.Util.FileHelper;
 import io.github.jeffshee.linestickerkeyboard.Util.SharedPrefHelper;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
@@ -31,8 +34,6 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
                                          [      ``                  ``              ``
  */
 public class StickerKeyboardView extends LinearLayout {
-    private static final String URL_F = "https://sdl-stickershop.line.naver.jp/stickershop/v1/sticker/";
-    private static final String URL_B = "/android/sticker.png;compress=true";
     ArrayList<View> views = new ArrayList<>();
     HistoryPackView historyPackView;
     private HistoryPack historyPack;
@@ -85,8 +86,10 @@ public class StickerKeyboardView extends LinearLayout {
                 ImageView icon = view.findViewById(R.id.textView);
                 if (i == 0)
                     icon.setImageDrawable(getResources().getDrawable(R.drawable.baseline_history_white_36));
-                else
-                    Glide.with(this).load(URL_F + String.valueOf(stickerPacks.get(i - 1).getFirstId()) + URL_B).into(icon);
+                else {
+                    File file = FileHelper.getPngFile(context, stickerPacks.get(i - 1).getFirstId());
+                    Glide.with(this).load(file).into(icon);
+                }
                 TabLayout.Tab tab = tabLayout.getTabAt(i);
                 if (tab != null) tab.setCustomView(view);
             }
@@ -121,13 +124,13 @@ public class StickerKeyboardView extends LinearLayout {
         });
     }
 
-    public void addNewItemToHistory(int id) {
-        historyPack.add(id);
+    public void addNewItemToHistory(Sticker sticker) {
+        historyPack.add(sticker);
         helper.saveNewHistoryPack(historyPack);
         historyPackView.adapter.update(historyPack);
     }
 
-    public void refreshViewPager(Context context){
+    public void refreshViewPager(Context context) {
         views = new ArrayList<>();
 
         // History Pack
@@ -151,8 +154,10 @@ public class StickerKeyboardView extends LinearLayout {
                 ImageView icon = view.findViewById(R.id.textView);
                 if (i == 0)
                     icon.setImageDrawable(getResources().getDrawable(R.drawable.baseline_history_white_36));
-                else
-                    Glide.with(this).load(URL_F + String.valueOf(stickerPacks.get(i - 1).getFirstId()) + URL_B).into(icon);
+                else {
+                    File file = FileHelper.getPngFile(context, stickerPacks.get(i - 1).getFirstId());
+                    Glide.with(this).load(file).into(icon);
+                }
                 TabLayout.Tab tab = tabLayout.getTabAt(i);
                 if (tab != null) tab.setCustomView(view);
             }

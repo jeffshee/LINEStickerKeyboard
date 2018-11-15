@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LINEスタンプキーボード</string>
+    <string name="loading">ロード中</string>
+    <string name="error">エラー</string>
+    <string name="title_edit_activity">マイスタンプ</string>
+    <string name="fetch_activity_toast">ダウンロードが始まります</string>
+    <string name="title_activity_fetch">スタンプをゲット</string>
+    <string name="main_activity_list_0">キーボードの有効化</string>
+    <string name="main_activity_list_1">キーボードの変更</string>
+    <string name="main_activity_list_2">テーマ</string>
+    <string name="main_activity_list_3">マイスタンプ</string>
+    <string name="main_activity_list_4">履歴を消去</string>
+    <string name="main_activity_list_5">フィードバック</string>
+    <string name="main_activity_list_6">このアプリについて</string>
+    <string name="delete">削除</string>
+    <string name="setting_list_0">メインメニュー</string>
+    <string name="setting_list_1">キーボードの変更</string>
+</resources>

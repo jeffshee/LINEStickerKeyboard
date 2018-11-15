@@ -1,29 +1,27 @@
 package io.github.jeffshee.linestickerkeyboard.Adapter;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import io.github.jeffshee.linestickerkeyboard.Model.StickerPack;
 import io.github.jeffshee.linestickerkeyboard.R;
+import io.github.jeffshee.linestickerkeyboard.Util.FileHelper;
+import io.github.jeffshee.linestickerkeyboard.Util.SharedPrefHelper;
 
 public class ListAdapter extends RecyclerView.Adapter implements ItemTouchHelperAdapter {
-    private static final String URL_F = "https://sdl-stickershop.line.naver.jp/stickershop/v1/sticker/";
-    private static final String URL_B = "/android/sticker.png;compress=true";
     private Context context;
     private ArrayList<StickerPack> stickerPacks;
 
@@ -46,51 +44,18 @@ public class ListAdapter extends RecyclerView.Adapter implements ItemTouchHelper
         final ListViewHolder stickerViewHolder = (ListViewHolder) viewHolder;
         stickerViewHolder.itemView.setTag(stickerPacks.get(i));
         stickerViewHolder.textView.setText("ID: " + String.valueOf(stickerPacks.get(i).getFirstId()));
-        Glide.with(context).load(URL_F + String.valueOf(stickerPacks.get(i).getFirstId()) + URL_B).into(stickerViewHolder.imageView);
-        stickerViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showEditorDialog(context, view);
-            }
-        });
+        File png = FileHelper.getPngFile(context, stickerPacks.get(i).getFirstId());
+        Glide.with(context).load(png).into(stickerViewHolder.imageView);
         stickerViewHolder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int i = stickerPacks.indexOf((StickerPack) stickerViewHolder.itemView.getTag());
                 stickerPacks.remove(i);
+                SharedPrefHelper helper = new SharedPrefHelper(context);
+                helper.saveNewStickerPacks(stickerPacks);
                 notifyItemRemoved(i);
             }
         });
-    }
-
-    private void showEditorDialog(Context context, final View itemView) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        View view = LayoutInflater.from(context).inflate(R.layout.dialog_editor, null, false);
-        builder.setView(view);
-        final EditText etId = view.findViewById(R.id.etId);
-        final EditText etCount = view.findViewById(R.id.etCount);
-        etId.setText(String.valueOf(((StickerPack) itemView.getTag()).getFirstId()));
-        etCount.setText(String.valueOf(((StickerPack) itemView.getTag()).getCount()));
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                int id, count;
-                try {
-                    id = Integer.parseInt(etId.getText().toString());
-                    count = Integer.parseInt(etCount.getText().toString());
-                } catch (NumberFormatException e) {
-                    return;
-                }
-                int index = stickerPacks.indexOf((StickerPack) itemView.getTag());
-                stickerPacks.remove(index);
-                StickerPack stickerPack = new StickerPack(id, count);
-                stickerPacks.add(index, stickerPack);
-                itemView.setTag(stickerPack);
-                notifyItemChanged(index);
-            }
-        });
-        builder.setNegativeButton("Cancel", null);
-        builder.show();
     }
 
     @Override
@@ -109,6 +74,8 @@ public class ListAdapter extends RecyclerView.Adapter implements ItemTouchHelper
                 Collections.swap(stickerPacks, i, i - 1);
             }
         }
+        SharedPrefHelper helper = new SharedPrefHelper(context);
+        helper.saveNewStickerPacks(stickerPacks);
         notifyItemMoved(fromPosition, toPosition);
     }
 

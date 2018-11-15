@@ -2,7 +2,11 @@ package io.github.jeffshee.linestickerkeyboard.Adapter;
 
 import android.content.Context;
 
+import java.io.File;
+
+import io.github.jeffshee.linestickerkeyboard.Model.Sticker;
 import io.github.jeffshee.linestickerkeyboard.Model.StickerPack;
+import io.github.jeffshee.linestickerkeyboard.Util.FileHelper;
 
 public class StickerAdapter extends BasePackAdapter {
     private StickerPack stickerPack;
@@ -20,13 +24,13 @@ public class StickerAdapter extends BasePackAdapter {
     }
 
     @Override
-    protected String getPreviewUrl(int position) {
-        return URL_F + String.valueOf(stickerPack.getFirstId() + position) + URL_B;
+    protected File getStickerPng(Context context, int position) {
+        return FileHelper.getPngFile(context, stickerPack.getId(position));
     }
 
     @Override
-    protected int getIdForTag(int position) {
-        return stickerPack.getFirstId() + position;
+    protected Sticker getSticker(int position) {
+        return stickerPack.getSticker(position);
     }
 
     @Override

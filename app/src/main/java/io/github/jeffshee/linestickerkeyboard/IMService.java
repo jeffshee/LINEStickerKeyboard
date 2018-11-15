@@ -23,13 +23,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
 
+import io.github.jeffshee.linestickerkeyboard.Model.Sticker;
+import io.github.jeffshee.linestickerkeyboard.Util.FileHelper;
 import io.github.jeffshee.linestickerkeyboard.View.StickerKeyboardView;
 
 public class IMService extends InputMethodService {
@@ -37,65 +33,39 @@ public class IMService extends InputMethodService {
     private static final String TAG = "ImageKeyboard";
     private static final String AUTHORITY = "io.github.jeffshee.linestickerkeyboard";
     private static final String MIME_TYPE_PNG = "image/png";
-    private static final String URL_F = "https://sdl-stickershop.line.naver.jp/stickershop/v1/sticker/";
-    private static final String URL_B = "/android/sticker.png;compress=true";
+    private static final String MIME_TYPE_GIF = "image/gif";
     private StickerKeyboardView stickerKeyboardView;
 
     /* ImageKeyboard Google Samples
      * https://github.com/googlesamples/android-CommitContentSampleIME/
      */
-    public void postSticker(final int id, boolean saveHistory) {
-        if (isCommitContentSupported()) {
-            File imagesDir = new File(getFilesDir(), "images");
-            if (imagesDir.mkdirs())
-                Log.d("Service", "Dir created successfully");
-            final File outputFile = new File(imagesDir, String.valueOf(id) + ".png");
-            final byte[] buffer = new byte[4096];
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    InputStream inputStream = null;
-                    try {
-                        try {
-                            OutputStream outputStream = null;
-                            try {
-                                URL url = new URL(URL_F + id + URL_B);
-                                URLConnection urlConnection = url.openConnection();
-                                urlConnection.connect();
-                                outputStream = new FileOutputStream(outputFile);
-                                inputStream = urlConnection.getInputStream();
-                                while (true) {
-                                    final int numRead = inputStream.read(buffer);
-                                    if (numRead <= 0) {
-                                        break;
-                                    }
-                                    outputStream.write(buffer, 0, numRead);
-                                }
-                                Log.d("Service", String.valueOf(id) + " downloaded");
-                                doCommitContent(String.valueOf(id), outputFile);
-                            } finally {
-                                if (outputStream != null) {
-                                    outputStream.flush();
-                                    outputStream.close();
-                                }
-                            }
-                        } finally {
-                            if (inputStream != null) {
-                                inputStream.close();
-                            }
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-            if (saveHistory) stickerKeyboardView.addNewItemToHistory(id);
-        } else {
-            Toast.makeText(this, "Not supported", Toast.LENGTH_SHORT).show();
+    public void postSticker(Sticker sticker, boolean saveHistory) {
+        boolean isPng = isCommitContentSupported(MIME_TYPE_PNG);
+        boolean isGif = isCommitContentSupported(MIME_TYPE_GIF);
+        if (sticker.getType() == Sticker.Type.STATIC) {
+            if(isPng){
+                File file = FileHelper.getFile(this, sticker);
+                doCommitContent(file, MIME_TYPE_PNG);
+                if (saveHistory) stickerKeyboardView.addNewItemToHistory(sticker);
+            }else{
+                Toast.makeText(this, "Not supported", Toast.LENGTH_SHORT).show();
+            }
+        }else{
+            if(isGif){
+                File file = FileHelper.getFile(this, sticker);
+                doCommitContent(file, MIME_TYPE_GIF);
+                if (saveHistory) stickerKeyboardView.addNewItemToHistory(sticker);
+            }else if(isPng){
+                File file = FileHelper.getPngFile(this, sticker.getId());
+                doCommitContent(file, MIME_TYPE_PNG);
+                if (saveHistory) stickerKeyboardView.addNewItemToHistory(sticker);
+            }else {
+                Toast.makeText(this, "Not supported", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
-    private boolean isCommitContentSupported() {
+    private boolean isCommitContentSupported(String mimeType) {
         final EditorInfo editorInfo = getCurrentInputEditorInfo();
         if (editorInfo == null) {
             return false;
@@ -108,15 +78,14 @@ public class IMService extends InputMethodService {
 
         final String[] supportedMimeTypes = EditorInfoCompat.getContentMimeTypes(editorInfo);
         for (String supportedMimeType : supportedMimeTypes) {
-            if (ClipDescription.compareMimeTypes(MIME_TYPE_PNG, supportedMimeType)) {
+            if (ClipDescription.compareMimeTypes(mimeType, supportedMimeType)) {
                 return true;
             }
         }
         return false;
     }
 
-    private void doCommitContent(@NonNull String description,
-                                 @NonNull File file) {
+    private void doCommitContent(@NonNull File file, String mimeType) {
         final EditorInfo editorInfo = getCurrentInputEditorInfo();
         final Uri contentUri = FileProvider.getUriForFile(this, AUTHORITY, file);
         final int flag;
@@ -135,7 +104,7 @@ public class IMService extends InputMethodService {
 
         final InputContentInfoCompat inputContentInfoCompat = new InputContentInfoCompat(
                 contentUri,
-                new ClipDescription(description, new String[]{MIME_TYPE_PNG}), null);
+                new ClipDescription("lineSticker", new String[]{mimeType}), null);
         InputConnectionCompat.commitContent(
                 getCurrentInputConnection(), getCurrentInputEditorInfo(), inputContentInfoCompat,
                 flag, null);

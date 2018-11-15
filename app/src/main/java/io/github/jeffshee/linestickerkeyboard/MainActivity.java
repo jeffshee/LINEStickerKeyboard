@@ -6,9 +6,12 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     Activity activity = this;
 
@@ -16,19 +19,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button btnEnableIM = findViewById(R.id.btnEnableIM);
-        Button btnEditSticker = findViewById(R.id.btnEditSticker);
-        btnEnableIM.setOnClickListener(this);
-        btnEditSticker.setOnClickListener(this);
+        ListView listView = findViewById(R.id.listView);
+        listView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
+                getResources().getStringArray(R.array.main_activity_list)));
+        listView.setOnItemClickListener(this);
     }
 
     @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btnEnableIM:
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        switch (i){
+            case 0:
                 activity.startActivity(new Intent(Settings.ACTION_INPUT_METHOD_SETTINGS));
                 break;
-            case R.id.btnEditSticker:
+            case 1:
+                InputMethodManager im = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                if (im != null) im.showInputMethodPicker();
+                break;
+            case 3:
                 activity.startActivity(new Intent(activity, EditActivity.class));
                 break;
         }

@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -20,13 +19,14 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 
+import java.io.File;
+
 import io.github.jeffshee.linestickerkeyboard.IMService;
+import io.github.jeffshee.linestickerkeyboard.Model.Sticker;
 import io.github.jeffshee.linestickerkeyboard.R;
 
 public abstract class BasePackAdapter extends RecyclerView.Adapter {
 
-    static final String URL_F = "https://sdl-stickershop.line.naver.jp/stickershop/v1/sticker/";
-    static final String URL_B = "/android/sticker.png;compress=true";
     private Context context;
     private IMService service;
 
@@ -46,12 +46,12 @@ public abstract class BasePackAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
         final StickerViewHolder stickerViewHolder = (StickerViewHolder) holder;
-        stickerViewHolder.itemView.setTag(getIdForTag(position));
+        stickerViewHolder.itemView.setTag(getSticker(position));
         stickerViewHolder.textView.setText(R.string.loading);
         stickerViewHolder.textView.setTextColor(context.getResources().getColor(R.color.colorLoading));
 
         RequestOptions requestOptions = new RequestOptions().error(R.drawable.error);
-        RequestBuilder<Drawable> requestBuilder = Glide.with(context).load(getPreviewUrl(position));
+        RequestBuilder<Drawable> requestBuilder = Glide.with(context).load(getStickerPng(context, position));
         requestBuilder.listener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -70,15 +70,16 @@ public abstract class BasePackAdapter extends RecyclerView.Adapter {
             @Override
             public void onClick(View view) {
                 if (service != null) {
-                    service.postSticker((int) stickerViewHolder.itemView.getTag(), saveHistory());
+                    service.postSticker((Sticker) stickerViewHolder.itemView.getTag(), saveHistory());
                 }
             }
         });
     }
 
-    protected abstract String getPreviewUrl(int position);
 
-    protected abstract int getIdForTag(int position);
+    protected abstract File getStickerPng(Context context, int position);
+
+    protected abstract Sticker getSticker(int position);
 
     protected abstract boolean saveHistory();
 
