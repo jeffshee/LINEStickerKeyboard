@@ -16,4 +16,7 @@
     <string name="delete">削除</string>
     <string name="setting_list_0">メインメニュー</string>
     <string name="setting_list_1">キーボードの変更</string>
+    <string name="main_activity_list_2a">MIMEタイプのチェック</string>
+    <string name="not_supported">サポートされていないアプリです</string>
+    <string name="share">共有</string>
 </resources>

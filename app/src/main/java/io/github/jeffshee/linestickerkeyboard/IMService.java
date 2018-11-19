@@ -43,26 +43,41 @@ public class IMService extends InputMethodService {
         boolean isPng = isCommitContentSupported(MIME_TYPE_PNG);
         boolean isGif = isCommitContentSupported(MIME_TYPE_GIF);
         if (sticker.getType() == Sticker.Type.STATIC) {
-            if(isPng){
+            if (isPng) {
                 File file = FileHelper.getFile(this, sticker);
                 doCommitContent(file, MIME_TYPE_PNG);
                 if (saveHistory) stickerKeyboardView.addNewItemToHistory(sticker);
-            }else{
-                Toast.makeText(this, "Not supported", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, getString(R.string.not_supported), Toast.LENGTH_SHORT).show();
+                File file = FileHelper.getFile(this, sticker);
+                createShareIntent(file, MIME_TYPE_PNG);
+                if (saveHistory) stickerKeyboardView.addNewItemToHistory(sticker);
             }
-        }else{
-            if(isGif){
+        } else {
+            if (isGif) {
                 File file = FileHelper.getFile(this, sticker);
                 doCommitContent(file, MIME_TYPE_GIF);
                 if (saveHistory) stickerKeyboardView.addNewItemToHistory(sticker);
-            }else if(isPng){
+            } else if (isPng) {
                 File file = FileHelper.getPngFile(this, sticker.getId());
                 doCommitContent(file, MIME_TYPE_PNG);
                 if (saveHistory) stickerKeyboardView.addNewItemToHistory(sticker);
-            }else {
-                Toast.makeText(this, "Not supported", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, getString(R.string.not_supported), Toast.LENGTH_SHORT).show();
+                File file = FileHelper.getFile(this, sticker);
+                createShareIntent(file, MIME_TYPE_GIF);
+                if (saveHistory) stickerKeyboardView.addNewItemToHistory(sticker);
             }
         }
+    }
+
+    private void createShareIntent(File file, String mimeType) {
+        final EditorInfo editorInfo = getCurrentInputEditorInfo();
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setPackage(editorInfo.packageName);
+        shareIntent.setType(mimeType);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(this, "io.github.jeffshee.linestickerkeyboard", file));
+        startActivity(Intent.createChooser(shareIntent,getString(R.string.share)));
     }
 
     private boolean isCommitContentSupported(String mimeType) {
@@ -77,6 +92,7 @@ public class IMService extends InputMethodService {
         }
 
         final String[] supportedMimeTypes = EditorInfoCompat.getContentMimeTypes(editorInfo);
+        for (String supportedMimeType : supportedMimeTypes) Log.d("Supported", supportedMimeType);
         for (String supportedMimeType : supportedMimeTypes) {
             if (ClipDescription.compareMimeTypes(mimeType, supportedMimeType)) {
                 return true;

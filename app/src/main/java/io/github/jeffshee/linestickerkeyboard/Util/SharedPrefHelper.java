@@ -23,16 +23,15 @@ public class SharedPrefHelper {
         sharedPreferences = context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
     }
 
-    public ArrayList<StickerPack> getStickerPacksFromPref(){
+    public ArrayList<StickerPack> getStickerPacksFromPref() {
         String json = sharedPreferences.getString(KEY_STICKERS, "");
         ArrayList<StickerPack> stickerPacks;
-        if(json.equals("")){
+        if (json.equals("")) {
             stickerPacks = new ArrayList<>();
-            // For Debug Purpose Only
-            // stickerPacks = loadDummyStickers();
-        }else{
+        } else {
             stickerPacks = gson.fromJson(sharedPreferences.getString(KEY_STICKERS, null),
-                    new TypeToken<ArrayList<StickerPack>>(){}.getType());
+                    new TypeToken<ArrayList<StickerPack>>() {
+                    }.getType());
         }
         return stickerPacks;
     }
@@ -50,14 +49,14 @@ public class SharedPrefHelper {
     }
 
 
-    public void addNewStickerPack(StickerPack stickerPack){
+    public void addNewStickerPack(StickerPack stickerPack) {
         ArrayList<StickerPack> stickerPacks;
         stickerPacks = getStickerPacksFromPref();
         stickerPacks.add(stickerPack);
         saveNewStickerPacks(stickerPacks);
     }
 
-    public void saveNewStickerPacks(ArrayList<StickerPack> stickerPacks){
+    public void saveNewStickerPacks(ArrayList<StickerPack> stickerPacks) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(KEY_STICKERS, gson.toJson(stickerPacks));
         editor.apply();
@@ -67,19 +66,5 @@ public class SharedPrefHelper {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(KEY_HISTORY, gson.toJson(historyPack));
         editor.apply();
-    }
-
-    private ArrayList<StickerPack> loadDummyStickers() {
-        ArrayList<StickerPack> stickerPacks = new ArrayList<>();
-        stickerPacks.add(new StickerPack(new Sticker(Sticker.Type.STATIC, 8031396), 40));
-        stickerPacks.add(new StickerPack(new Sticker(Sticker.Type.STATIC, 13831750), 40));
-        stickerPacks.add(new StickerPack(new Sticker(Sticker.Type.STATIC, 99649182), 40));
-
-        stickerPacks.add(new StickerPack(new Sticker(Sticker.Type.ANIMATED, 23789448), 24));
-        stickerPacks.add(new StickerPack(new Sticker(Sticker.Type.POPUP, 14867006), 24));
-
-        // Save Dummy Stickers To Pref
-        saveNewStickerPacks(stickerPacks);
-        return stickerPacks;
     }
 }

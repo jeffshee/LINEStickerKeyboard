@@ -10,24 +10,36 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+
+import io.github.jeffshee.linestickerkeyboard.Model.HistoryPack;
+import io.github.jeffshee.linestickerkeyboard.Model.Sticker;
+import io.github.jeffshee.linestickerkeyboard.Util.SharedPrefHelper;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     Activity activity = this;
+    SharedPrefHelper sharedPrefHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        sharedPrefHelper = new SharedPrefHelper(this);
+
         ListView listView = findViewById(R.id.listView);
-        listView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
-                getResources().getStringArray(R.array.main_activity_list)));
+        listView.setAdapter(new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.main_activity_list)));
         listView.setOnItemClickListener(this);
     }
 
+    private static final String KEY_IS_MIME = "linestickerkeyboard.pref.mime";
+
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        switch (i){
+        switch (i) {
             case 0:
                 activity.startActivity(new Intent(Settings.ACTION_INPUT_METHOD_SETTINGS));
                 break;
@@ -37,6 +49,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 break;
             case 3:
                 activity.startActivity(new Intent(activity, EditActivity.class));
+                break;
+            case 4:
+                sharedPrefHelper.saveNewHistoryPack(new HistoryPack(new ArrayList<Sticker>()));
+                break;
+            default:
+                // TODO:
+                Toast.makeText(activity, "Stub", Toast.LENGTH_SHORT).show();
                 break;
         }
     }

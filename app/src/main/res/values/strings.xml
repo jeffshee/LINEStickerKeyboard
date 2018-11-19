@@ -13,6 +13,7 @@
     <string-array name="main_activity_list">
         <item>@string/main_activity_list_0</item>
         <item>@string/main_activity_list_1</item>
+<!--        <item>@string/main_activity_list_2a</item>-->
         <item>@string/main_activity_list_2</item>
         <item>@string/main_activity_list_3</item>
         <item>@string/main_activity_list_4</item>
@@ -24,6 +25,7 @@
     <string name="fetch_activity_toast">Your download will start shortly</string>
     <string name="main_activity_list_0">Enable keyboard</string>
     <string name="main_activity_list_1">Switch keyboard</string>
+    <string name="main_activity_list_2a">Check MIME Type</string>
     <string name="main_activity_list_2">Theme</string>
     <string name="main_activity_list_3">My collections</string>
     <string name="main_activity_list_4">Clear History</string>
@@ -32,4 +34,6 @@
 
     <string name="setting_list_0">Main Menu</string>
     <string name="setting_list_1">Switch Keyboard</string>
+    <string name="not_supported">This app does not support media insertion from the keyboard</string>
+    <string name="share">Share via</string>
 </resources>

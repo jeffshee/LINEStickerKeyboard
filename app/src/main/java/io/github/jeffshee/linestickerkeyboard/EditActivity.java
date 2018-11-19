@@ -39,27 +39,27 @@ public class EditActivity extends AppCompatActivity {
                 , R.dimen.item_offset_x, R.dimen.item_offset_y);
         recyclerView.addItemDecoration(itemOffsetDecoration);
     }
-}
 
-class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
+    class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
 
-    private int mItemOffsetX;
-    private int mItemOffsetY;
+        private int mItemOffsetX;
+        private int mItemOffsetY;
 
-    private ItemOffsetDecoration(int itemOffsetX, int itemOffsetY) {
-        mItemOffsetX = itemOffsetX;
-        mItemOffsetY = itemOffsetY;
-    }
+        private ItemOffsetDecoration(int itemOffsetX, int itemOffsetY) {
+            mItemOffsetX = itemOffsetX;
+            mItemOffsetY = itemOffsetY;
+        }
 
-    ItemOffsetDecoration(@NonNull Context context, @DimenRes int itemOffsetIdX, @DimenRes int itemOffsetIdY) {
-        this(context.getResources().getDimensionPixelSize(itemOffsetIdX),
-                context.getResources().getDimensionPixelSize(itemOffsetIdY));
-    }
+        ItemOffsetDecoration(@NonNull Context context, @DimenRes int itemOffsetIdX, @DimenRes int itemOffsetIdY) {
+            this(context.getResources().getDimensionPixelSize(itemOffsetIdX),
+                    context.getResources().getDimensionPixelSize(itemOffsetIdY));
+        }
 
-    @Override
-    public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent,
-                               @NonNull RecyclerView.State state) {
-        super.getItemOffsets(outRect, view, parent, state);
-        outRect.set(mItemOffsetX, mItemOffsetY, mItemOffsetX, mItemOffsetY / 2);
+        @Override
+        public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent,
+                                   @NonNull RecyclerView.State state) {
+            super.getItemOffsets(outRect, view, parent, state);
+            outRect.set(mItemOffsetX, mItemOffsetY, mItemOffsetX, mItemOffsetY / 2);
+        }
     }
 }
