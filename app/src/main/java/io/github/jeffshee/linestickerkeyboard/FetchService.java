@@ -96,7 +96,6 @@ public class FetchService extends IntentService {
             notificationManager.notify(NOTIFICATION_ID, builder.build());
             if (download()) {
                 if (type == Sticker.Type.STATIC) {
-                    // TODO:
                     SharedPrefHelper helper = new SharedPrefHelper(this);
                     helper.addNewStickerPack(new StickerPack(new Sticker(type, firstId), count));
                     resultMsg = "Operation completed";
@@ -105,7 +104,6 @@ public class FetchService extends IntentService {
                             .setOngoing(true).setProgress(0, 0, true);
                     notificationManager.notify(NOTIFICATION_ID, builder.build());
                     if (convert()) {
-                        // TODO:
                         SharedPrefHelper helper = new SharedPrefHelper(this);
                         helper.addNewStickerPack(new StickerPack(new Sticker(type, firstId), count));
                         resultMsg = "Operation completed";

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:apps="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/manual_add"
+        android:title="@string/manual_add"
+        apps:showAsAction="always"/>
+</menu>

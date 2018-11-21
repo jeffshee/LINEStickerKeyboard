@@ -1,15 +1,23 @@
 package io.github.jeffshee.linestickerkeyboard;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.DimenRes;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -19,6 +27,8 @@ import io.github.jeffshee.linestickerkeyboard.Model.StickerPack;
 import io.github.jeffshee.linestickerkeyboard.Util.SharedPrefHelper;
 
 public class EditActivity extends AppCompatActivity {
+
+    Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +48,41 @@ public class EditActivity extends AppCompatActivity {
         ItemOffsetDecoration itemOffsetDecoration = new ItemOffsetDecoration(this
                 , R.dimen.item_offset_x, R.dimen.item_offset_y);
         recyclerView.addItemDecoration(itemOffsetDecoration);
+        activity = this;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.edit_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.manual_add:
+                manualAdd();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void manualAdd() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View view = getLayoutInflater().inflate(R.layout.dialog_editor, null);
+        final EditText editText = view.findViewById(R.id.etId);
+        builder.setView(view)
+                .setPositiveButton(getString(R.string.positive_confirm), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        FetchService.startActionFetchManual(activity, Integer.parseInt(editText.getText().toString()));
+                        Toast.makeText(activity, getString(R.string.fetch_activity_toast), Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton(getString(R.string.negative_cancel), null);
+        builder.show();
     }
 
     class ItemOffsetDecoration extends RecyclerView.ItemDecoration {

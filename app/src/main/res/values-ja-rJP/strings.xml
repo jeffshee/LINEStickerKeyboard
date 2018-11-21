@@ -12,11 +12,15 @@
     <string name="main_activity_list_3">マイスタンプ</string>
     <string name="main_activity_list_4">履歴を消去</string>
     <string name="main_activity_list_5">フィードバック</string>
-    <string name="main_activity_list_6">このアプリについて</string>
+    <string name="main_activity_list_6">使い方・このアプリについて</string>
     <string name="delete">削除</string>
     <string name="setting_list_0">メインメニュー</string>
     <string name="setting_list_1">キーボードの変更</string>
-    <string name="main_activity_list_2a">MIMEタイプのチェック</string>
     <string name="not_supported">サポートされていないアプリです</string>
     <string name="share">共有</string>
+    <string name="manual_add">手動追加</string>
+    <string name="store_id">ストアID</string>
+    <string name="positive_confirm">OK</string>
+    <string name="negative_cancel">キャンセル</string>
+    <string name="clear_history">履歴を消去します</string>
 </resources>
