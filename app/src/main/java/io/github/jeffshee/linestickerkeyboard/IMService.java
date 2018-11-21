@@ -2,9 +2,12 @@
 package io.github.jeffshee.linestickerkeyboard;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.ClipDescription;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.inputmethodservice.InputMethodService;
 import android.net.Uri;
 import android.os.Build;
@@ -13,6 +16,7 @@ import android.support.v13.view.inputmethod.EditorInfoCompat;
 import android.support.v13.view.inputmethod.InputConnectionCompat;
 import android.support.v13.view.inputmethod.InputContentInfoCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -35,7 +39,8 @@ public class IMService extends InputMethodService {
     private static final String MIME_TYPE_PNG = "image/png";
     private static final String MIME_TYPE_GIF = "image/gif";
     private StickerKeyboardView stickerKeyboardView;
-
+    Receiver receiver;
+    Context context = this;
     /* ImageKeyboard Google Samples
      * https://github.com/googlesamples/android-CommitContentSampleIME/
      */
@@ -181,5 +186,28 @@ public class IMService extends InputMethodService {
         //
     }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        // Broadcast Receiver
+        IntentFilter filter = new IntentFilter(FetchService.BROADCAST_ACTION);
+        receiver = new Receiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+    }
+
+    private class Receiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(stickerKeyboardView!=null)
+                stickerKeyboardView.refreshViewPager(context);
+        }
+    }
 }
 

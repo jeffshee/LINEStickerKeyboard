@@ -1,11 +1,11 @@
 package io.github.jeffshee.linestickerkeyboard;
 
 import android.app.IntentService;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import org.jsoup.Jsoup;
@@ -40,6 +40,8 @@ public class FetchService extends IntentService {
     private static final String STATIC_URL_FORMAT = URL_COMMON + "%d/IOS/sticker@2x.png;compress=true";
     private static final String ANIMATED_URL_FORMAT = URL_COMMON + "%d/IOS/sticker_animation@2x.png;compress=true";
     private static final String POPUP_URL_FORMAT = URL_COMMON + "%d/IOS/sticker_popup.png;compress=true";
+
+    public static final String BROADCAST_ACTION = "io.github.jeffshee.linestickerkeyboard.REFRESH";
 
     int firstId = 0, count = 0;
     Sticker.Type type;
@@ -99,6 +101,7 @@ public class FetchService extends IntentService {
                     SharedPrefHelper helper = new SharedPrefHelper(this);
                     helper.addNewStickerPack(new StickerPack(new Sticker(type, firstId), count));
                     resultMsg = "Operation completed";
+                    send();
                 } else {
                     builder.setContentTitle("Converting").setSmallIcon(R.mipmap.ic_launcher_round)
                             .setOngoing(true).setProgress(0, 0, true);
@@ -107,6 +110,7 @@ public class FetchService extends IntentService {
                         SharedPrefHelper helper = new SharedPrefHelper(this);
                         helper.addNewStickerPack(new StickerPack(new Sticker(type, firstId), count));
                         resultMsg = "Operation completed";
+                        send();
                     } else resultMsg = "Convert failed";
                 }
             } else resultMsg = "Download failed";
@@ -236,5 +240,12 @@ public class FetchService extends IntentService {
             notificationManager.notify(NOTIFICATION_ID, builder.build());
         }
         return true;
+    }
+
+    private void send(){
+        Log.d("Fetch","Send");
+        Intent intent = new Intent();
+        intent.setAction(BROADCAST_ACTION);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }

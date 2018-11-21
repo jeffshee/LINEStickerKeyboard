@@ -30,7 +30,6 @@ public class ListAdapter extends RecyclerView.Adapter implements ItemTouchHelper
         this.stickerPacks = stickerPacks;
     }
 
-
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -82,6 +81,10 @@ public class ListAdapter extends RecyclerView.Adapter implements ItemTouchHelper
     @Override
     public void onItemDismiss(int position) {
 
+    }
+
+    public void setData(ArrayList<StickerPack> stickerPacks){
+        this.stickerPacks = stickerPacks;
     }
 
     // ViewHolder

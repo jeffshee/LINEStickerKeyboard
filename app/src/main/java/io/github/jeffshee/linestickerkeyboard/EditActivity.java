@@ -1,17 +1,22 @@
 package io.github.jeffshee.linestickerkeyboard;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.DimenRes;
 import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,6 +34,10 @@ import io.github.jeffshee.linestickerkeyboard.Util.SharedPrefHelper;
 public class EditActivity extends AppCompatActivity {
 
     Activity activity;
+    ListAdapter listAdapter;
+    SharedPrefHelper helper;
+    ArrayList<StickerPack> stickerPacks;
+    Receiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +47,9 @@ public class EditActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        SharedPrefHelper helper = new SharedPrefHelper(this);
-        ArrayList<StickerPack> stickerPacks = helper.getStickerPacksFromPref();
-        ListAdapter listAdapter = new ListAdapter(this, stickerPacks);
+        helper = new SharedPrefHelper(this);
+        stickerPacks = helper.getStickerPacksFromPref();
+        listAdapter = new ListAdapter(this, stickerPacks);
         ItemTouchHelper.Callback callback = new AdapterCallback(listAdapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
@@ -48,7 +57,19 @@ public class EditActivity extends AppCompatActivity {
         ItemOffsetDecoration itemOffsetDecoration = new ItemOffsetDecoration(this
                 , R.dimen.item_offset_x, R.dimen.item_offset_y);
         recyclerView.addItemDecoration(itemOffsetDecoration);
+
+        // Broadcast Receiver
+        IntentFilter filter = new IntentFilter(FetchService.BROADCAST_ACTION);
+        receiver = new Receiver();
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
+
         activity = this;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
     @Override
@@ -107,4 +128,15 @@ public class EditActivity extends AppCompatActivity {
             outRect.set(mItemOffsetX, mItemOffsetY, mItemOffsetX, mItemOffsetY / 2);
         }
     }
+
+    private class Receiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            stickerPacks = helper.getStickerPacksFromPref();
+            listAdapter.setData(stickerPacks);
+            listAdapter.notifyDataSetChanged();
+        }
+    }
+
 }
