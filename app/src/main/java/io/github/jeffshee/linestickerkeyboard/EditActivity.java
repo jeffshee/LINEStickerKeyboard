@@ -16,7 +16,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,13 +28,14 @@ import java.util.ArrayList;
 import io.github.jeffshee.linestickerkeyboard.Adapter.AdapterCallback;
 import io.github.jeffshee.linestickerkeyboard.Adapter.ListAdapter;
 import io.github.jeffshee.linestickerkeyboard.Model.StickerPack;
-import io.github.jeffshee.linestickerkeyboard.Util.SharedPrefHelper;
+import io.github.jeffshee.linestickerkeyboard.Util.NewSharedPrefHelper;
+
+import static io.github.jeffshee.linestickerkeyboard.FetchService.BROADCAST_ACTION;
 
 public class EditActivity extends AppCompatActivity {
 
     Activity activity;
     ListAdapter listAdapter;
-    SharedPrefHelper helper;
     ArrayList<StickerPack> stickerPacks;
     Receiver receiver;
 
@@ -47,8 +47,7 @@ public class EditActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        helper = new SharedPrefHelper(this);
-        stickerPacks = helper.getStickerPacksFromPref();
+        stickerPacks = NewSharedPrefHelper.getStickerPacksFromPref(this);
         listAdapter = new ListAdapter(this, stickerPacks);
         ItemTouchHelper.Callback callback = new AdapterCallback(listAdapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
@@ -59,7 +58,7 @@ public class EditActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(itemOffsetDecoration);
 
         // Broadcast Receiver
-        IntentFilter filter = new IntentFilter(FetchService.BROADCAST_ACTION);
+        IntentFilter filter = new IntentFilter(BROADCAST_ACTION);
         receiver = new Receiver();
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
 
@@ -133,9 +132,11 @@ public class EditActivity extends AppCompatActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            stickerPacks = helper.getStickerPacksFromPref();
-            listAdapter.setData(stickerPacks);
-            listAdapter.notifyDataSetChanged();
+            if("add".equals(intent.getStringExtra("message"))){
+                stickerPacks = NewSharedPrefHelper.getStickerPacksFromPref(activity);
+                listAdapter.setData(stickerPacks);
+                listAdapter.notifyDataSetChanged();
+            }
         }
     }
 

@@ -24,7 +24,7 @@ import io.github.jeffshee.linestickerkeyboard.Model.Sticker;
 import io.github.jeffshee.linestickerkeyboard.Model.StickerPack;
 import io.github.jeffshee.linestickerkeyboard.R;
 import io.github.jeffshee.linestickerkeyboard.Util.FileHelper;
-import io.github.jeffshee.linestickerkeyboard.Util.SharedPrefHelper;
+import io.github.jeffshee.linestickerkeyboard.Util.NewSharedPrefHelper;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -38,7 +38,6 @@ public class StickerKeyboardView extends LinearLayout {
     HistoryPackView historyPackView;
     private HistoryPack historyPack;
     private ArrayList<StickerPack> stickerPacks;
-    private SharedPrefHelper helper;
     private StickerViewPagerAdapter adapter;
     private ViewPager viewPager;
     private TabLayout tabLayout;
@@ -52,19 +51,17 @@ public class StickerKeyboardView extends LinearLayout {
         setOrientation(LinearLayout.HORIZONTAL);
         setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
-        helper = new SharedPrefHelper(context);
-
         // https://stackoverflow.com/questions/36924481/you-need-to-use-a-theme-appcompat-theme-or-descendant-with-the-design-library
         ContextThemeWrapper ctx = new ContextThemeWrapper(context, R.style.MyTheme);
         LayoutInflater.from(ctx).inflate(R.layout.keyboard_layout, this, true);
 
         // History Pack
-        historyPack = helper.getHistoryFromPref();
+        historyPack = NewSharedPrefHelper.getHistoryFromPref(context);
         historyPackView = new HistoryPackView(context, historyPack);
         views.add(historyPackView);
 
         // Sticker Pack
-        stickerPacks = helper.getStickerPacksFromPref();
+        stickerPacks = NewSharedPrefHelper.getStickerPacksFromPref(context);
         for (StickerPack stickerPack : stickerPacks) {
             views.add(new StickerPackView(context, stickerPack));
         }
@@ -124,9 +121,8 @@ public class StickerKeyboardView extends LinearLayout {
         });
     }
 
-    public void addNewItemToHistory(Sticker sticker) {
+    public void refreshHistoryAdapter(Sticker sticker) {
         historyPack.add(sticker);
-        helper.saveNewHistoryPack(historyPack);
         historyPackView.adapter.update(historyPack);
     }
 
@@ -134,12 +130,12 @@ public class StickerKeyboardView extends LinearLayout {
         views = new ArrayList<>();
 
         // History Pack
-        historyPack = helper.getHistoryFromPref();
+        historyPack = NewSharedPrefHelper.getHistoryFromPref(context);
         historyPackView = new HistoryPackView(context, historyPack);
         views.add(historyPackView);
 
         // Sticker Pack
-        stickerPacks = helper.getStickerPacksFromPref();
+        stickerPacks = NewSharedPrefHelper.getStickerPacksFromPref(context);
         for (StickerPack stickerPack : stickerPacks) {
             views.add(new StickerPackView(context, stickerPack));
         }

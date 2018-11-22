@@ -69,8 +69,8 @@
     <color name="md_deep_purple_A700">#6200EA</color>
 
     <!-- indigo -->
-    <color name="md_indigo_50">#E8EAF6</color>
-    <color name="md_indigo_100">#C5CAE9</color>
+    <color name="md_indigo_50">#e8eaf6</color>
+    <color name="md_indigo_100">#c5cae9</color>
     <color name="md_indigo_200">#9FA8DA</color>
     <color name="md_indigo_300">#7986CB</color>
     <color name="md_indigo_400">#5C6BC0</color>

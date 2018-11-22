@@ -30,6 +30,7 @@ import java.io.File;
 
 import io.github.jeffshee.linestickerkeyboard.Model.Sticker;
 import io.github.jeffshee.linestickerkeyboard.Util.FileHelper;
+import io.github.jeffshee.linestickerkeyboard.Util.NewSharedPrefHelper;
 import io.github.jeffshee.linestickerkeyboard.View.StickerKeyboardView;
 
 public class IMService extends InputMethodService {
@@ -41,37 +42,46 @@ public class IMService extends InputMethodService {
     private StickerKeyboardView stickerKeyboardView;
     Receiver receiver;
     Context context = this;
+
     /* ImageKeyboard Google Samples
      * https://github.com/googlesamples/android-CommitContentSampleIME/
      */
     public void postSticker(Sticker sticker, boolean saveHistory) {
-        boolean isPng = isCommitContentSupported(MIME_TYPE_PNG);
-        boolean isGif = isCommitContentSupported(MIME_TYPE_GIF);
-        if (sticker.getType() == Sticker.Type.STATIC) {
-            if (isPng) {
-                File file = FileHelper.getFile(this, sticker);
-                doCommitContent(file, MIME_TYPE_PNG);
-                if (saveHistory) stickerKeyboardView.addNewItemToHistory(sticker);
+        // Launch Main Activity for disclaimer
+        if (!NewSharedPrefHelper.getDisclaimerStatus(this)) {
+            Toast.makeText(this, getString(R.string.disclaimer_toast), Toast.LENGTH_SHORT).show();
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }else{
+            boolean isPng = isCommitContentSupported(MIME_TYPE_PNG);
+            boolean isGif = isCommitContentSupported(MIME_TYPE_GIF);
+            if (sticker.getType() == Sticker.Type.STATIC) {
+                if (isPng) {
+                    File file = FileHelper.getFile(this, sticker);
+                    doCommitContent(file, MIME_TYPE_PNG);
+                } else {
+                    Toast.makeText(this, getString(R.string.not_supported), Toast.LENGTH_SHORT).show();
+                    File file = FileHelper.getFile(this, sticker);
+                    createShareIntent(file, MIME_TYPE_PNG);
+                }
             } else {
-                Toast.makeText(this, getString(R.string.not_supported), Toast.LENGTH_SHORT).show();
-                File file = FileHelper.getFile(this, sticker);
-                createShareIntent(file, MIME_TYPE_PNG);
-                if (saveHistory) stickerKeyboardView.addNewItemToHistory(sticker);
+                if (isGif) {
+                    File file = FileHelper.getFile(this, sticker);
+                    doCommitContent(file, MIME_TYPE_GIF);
+                } else if (isPng) {
+                    File file = FileHelper.getPngFile(this, sticker.getId());
+                    doCommitContent(file, MIME_TYPE_PNG);
+                } else {
+                    Toast.makeText(this, getString(R.string.not_supported), Toast.LENGTH_SHORT).show();
+                    File file = FileHelper.getFile(this, sticker);
+                    createShareIntent(file, MIME_TYPE_GIF);
+                }
+
             }
-        } else {
-            if (isGif) {
-                File file = FileHelper.getFile(this, sticker);
-                doCommitContent(file, MIME_TYPE_GIF);
-                if (saveHistory) stickerKeyboardView.addNewItemToHistory(sticker);
-            } else if (isPng) {
-                File file = FileHelper.getPngFile(this, sticker.getId());
-                doCommitContent(file, MIME_TYPE_PNG);
-                if (saveHistory) stickerKeyboardView.addNewItemToHistory(sticker);
-            } else {
-                Toast.makeText(this, getString(R.string.not_supported), Toast.LENGTH_SHORT).show();
-                File file = FileHelper.getFile(this, sticker);
-                createShareIntent(file, MIME_TYPE_GIF);
-                if (saveHistory) stickerKeyboardView.addNewItemToHistory(sticker);
+            if (saveHistory) {
+                NewSharedPrefHelper.addStickerToHistory(this, sticker);
+                stickerKeyboardView.refreshHistoryAdapter(sticker);
             }
         }
     }
@@ -82,7 +92,7 @@ public class IMService extends InputMethodService {
         shareIntent.setPackage(editorInfo.packageName);
         shareIntent.setType(mimeType);
         shareIntent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(this, "io.github.jeffshee.linestickerkeyboard", file));
-        startActivity(Intent.createChooser(shareIntent,getString(R.string.share)));
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share)));
     }
 
     private boolean isCommitContentSupported(String mimeType) {
@@ -143,13 +153,12 @@ public class IMService extends InputMethodService {
         super.onStartInput(attribute, restarting);
     }
 
-    /*
-                https://stackoverflow.com/questions/3494476/android-ime-how-to-show-a-pop-up-dialog
-                I JUST WANT TO SHOW A DIALOG ON MY KEYBOARD WHY IT IS SO F*KING DIFFICULT LOL??!? T^T
-                https://stackoverflow.com/questions/51906586/display-dialog-from-input-method-service-in-android-9-android-pie
-                NOTE: Might causing bug on Android 9
-                TODO: Confirmation Required
-             */
+    /* https://stackoverflow.com/questions/3494476/android-ime-how-to-show-a-pop-up-dialog
+       https://stackoverflow.com/questions/51906586/display-dialog-from-input-method-service-in-android-9-android-pie
+       NOTE: Might causing bug on Android 9
+       TODO: Confirmation Required
+     */
+
     public void showSettingDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.app_name)
@@ -205,7 +214,7 @@ public class IMService extends InputMethodService {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(stickerKeyboardView!=null)
+            if (stickerKeyboardView != null)
                 stickerKeyboardView.refreshViewPager(context);
         }
     }

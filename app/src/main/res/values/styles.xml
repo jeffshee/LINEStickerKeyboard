@@ -20,7 +20,7 @@
     <style name="MyTheme" parent="Theme.AppCompat" >
         <item name="colorPrimary">@color/md_deep_purple_600</item>
         <item name="colorPrimaryDark">@color/md_deep_purple_900</item>
-        <item name="colorAccent">@color/md_pink_A200</item>
+        <item name="colorAccent">@color/md_indigo_A100</item>
         <item name="android:colorBackground">@color/md_grey_900</item>
     </style>
 

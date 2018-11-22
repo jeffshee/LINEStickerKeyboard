@@ -1,7 +1,11 @@
 package io.github.jeffshee.linestickerkeyboard.Adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -19,7 +24,9 @@ import java.util.Collections;
 import io.github.jeffshee.linestickerkeyboard.Model.StickerPack;
 import io.github.jeffshee.linestickerkeyboard.R;
 import io.github.jeffshee.linestickerkeyboard.Util.FileHelper;
-import io.github.jeffshee.linestickerkeyboard.Util.SharedPrefHelper;
+import io.github.jeffshee.linestickerkeyboard.Util.NewSharedPrefHelper;
+
+import static io.github.jeffshee.linestickerkeyboard.FetchService.BROADCAST_ACTION;
 
 public class ListAdapter extends RecyclerView.Adapter implements ItemTouchHelperAdapter {
     private Context context;
@@ -42,19 +49,55 @@ public class ListAdapter extends RecyclerView.Adapter implements ItemTouchHelper
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         final ListViewHolder stickerViewHolder = (ListViewHolder) viewHolder;
         stickerViewHolder.itemView.setTag(stickerPacks.get(i));
-        stickerViewHolder.textView.setText("ID: " + String.valueOf(stickerPacks.get(i).getFirstId()));
+        stickerViewHolder.textView.setText(stickerPacks.get(i).getTitle());
         File png = FileHelper.getPngFile(context, stickerPacks.get(i).getFirstId());
         Glide.with(context).load(png).into(stickerViewHolder.imageView);
         stickerViewHolder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int i = stickerPacks.indexOf((StickerPack) stickerViewHolder.itemView.getTag());
-                stickerPacks.remove(i);
-                SharedPrefHelper helper = new SharedPrefHelper(context);
-                helper.saveNewStickerPacks(stickerPacks);
-                notifyItemRemoved(i);
+                delete(i);
             }
         });
+        stickerViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int i = stickerPacks.indexOf((StickerPack) stickerViewHolder.itemView.getTag());
+                Toast.makeText(context,
+                        context.getString(R.string.store_id)+" "+
+                                stickerPacks.get(i).getStoreId(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void delete(final int index) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(context.getString(R.string.delete_sticker))
+                .setPositiveButton(context.getString(R.string.positive_confirm), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // Remove deleted sticker from history
+                        NewSharedPrefHelper.cleanHistory(context, stickerPacks.get(index));
+                        // Delete files
+                        FileHelper.deleteFile(context, stickerPacks.get(index));
+                        // Save changes
+                        stickerPacks.remove(index);
+                        NewSharedPrefHelper.saveNewStickerPacks(context, stickerPacks);
+                        // Notify adapter itself
+                        notifyItemRemoved(index);
+                        // Notify IMServer only
+                        Intent intent = new Intent();
+                        intent.setAction(BROADCAST_ACTION);
+                        intent.putExtra("message", "delete");
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                    }
+                })
+                .setNegativeButton(context.getString(R.string.negative_cancel), null);
+        builder.show();
+    }
+
+    public void setData(ArrayList<StickerPack> stickerPacks) {
+        this.stickerPacks = stickerPacks;
     }
 
     @Override
@@ -73,18 +116,18 @@ public class ListAdapter extends RecyclerView.Adapter implements ItemTouchHelper
                 Collections.swap(stickerPacks, i, i - 1);
             }
         }
-        SharedPrefHelper helper = new SharedPrefHelper(context);
-        helper.saveNewStickerPacks(stickerPacks);
+        NewSharedPrefHelper.saveNewStickerPacks(context, stickerPacks);
         notifyItemMoved(fromPosition, toPosition);
+        // Notify IMServer only
+        Intent intent = new Intent();
+        intent.setAction(BROADCAST_ACTION);
+        intent.putExtra("message", "reorder");
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
     @Override
     public void onItemDismiss(int position) {
 
-    }
-
-    public void setData(ArrayList<StickerPack> stickerPacks){
-        this.stickerPacks = stickerPacks;
     }
 
     // ViewHolder

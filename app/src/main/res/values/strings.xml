@@ -13,7 +13,7 @@
     <string-array name="main_activity_list">
         <item>@string/main_activity_list_0</item>
         <item>@string/main_activity_list_1</item>
-        <item>@string/main_activity_list_2</item>
+<!--        <item>@string/main_activity_list_2</item>-->
         <item>@string/main_activity_list_3</item>
         <item>@string/main_activity_list_4</item>
         <item>@string/main_activity_list_5</item>
@@ -39,4 +39,12 @@
     <string name="positive_confirm">Confirm</string>
     <string name="negative_cancel">Cancel</string>
     <string name="clear_history">This will clear your sticker history</string>
+    <string name="delete_sticker">Delete this sticker pack</string>
+    <string name="positive_agree">Agree</string>
+    <string name="negative_disagree">Disagree</string>
+    <string name="disclaimer">Disclaimer</string>
+    <string name="disclaimer_text">This app is not affiliated with, maintained, authorized,
+        endorsed or sponsored by the LINE Corporation or any of their affiliates.
+        We take no resposibility or liability for using this app.</string>
+    <string name="disclaimer_toast">Please agree to our disclaimer</string>
 </resources>

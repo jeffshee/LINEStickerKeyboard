@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 import io.github.jeffshee.apng2gif.Apng2Gif;
 import io.github.jeffshee.linestickerkeyboard.Model.Sticker;
 import io.github.jeffshee.linestickerkeyboard.Model.StickerPack;
-import io.github.jeffshee.linestickerkeyboard.Util.SharedPrefHelper;
+import io.github.jeffshee.linestickerkeyboard.Util.NewSharedPrefHelper;
 
 public class FetchService extends IntentService {
     private static final String ACTION_FETCH = "io.github.jeffshee.linestickerkeyboard.action.FETCH";
@@ -43,7 +43,8 @@ public class FetchService extends IntentService {
 
     public static final String BROADCAST_ACTION = "io.github.jeffshee.linestickerkeyboard.REFRESH";
 
-    int firstId = 0, count = 0;
+    int firstId = 0, count = 0, storeId = 0;
+    String title = "";
     Sticker.Type type;
     NotificationCompat.Builder builder;
     NotificationManagerCompat notificationManager;
@@ -98,8 +99,8 @@ public class FetchService extends IntentService {
             notificationManager.notify(NOTIFICATION_ID, builder.build());
             if (download()) {
                 if (type == Sticker.Type.STATIC) {
-                    SharedPrefHelper helper = new SharedPrefHelper(this);
-                    helper.addNewStickerPack(new StickerPack(new Sticker(type, firstId), count));
+                    NewSharedPrefHelper.addNewStickerPack(this,
+                            new StickerPack(new Sticker(type, firstId), count, storeId, title));
                     resultMsg = "Operation completed";
                     send();
                 } else {
@@ -107,8 +108,8 @@ public class FetchService extends IntentService {
                             .setOngoing(true).setProgress(0, 0, true);
                     notificationManager.notify(NOTIFICATION_ID, builder.build());
                     if (convert()) {
-                        SharedPrefHelper helper = new SharedPrefHelper(this);
-                        helper.addNewStickerPack(new StickerPack(new Sticker(type, firstId), count));
+                        NewSharedPrefHelper.addNewStickerPack(this,
+                                new StickerPack(new Sticker(type, firstId), count, storeId, title));
                         resultMsg = "Operation completed";
                         send();
                     } else resultMsg = "Convert failed";
@@ -160,6 +161,11 @@ public class FetchService extends IntentService {
                     if (matcher.find()) {
                         firstId = Integer.valueOf(matcher.group(1));
                         Log.d("Fetcher", "firstId: " + firstId + " count: " + count);
+                        // Get Title ;)
+                        element = document.getElementsByClass("mdCMN08Ttl").first();
+                        title = element.text();
+                        // Get StoreId ;)
+                        storeId = Integer.parseInt(url.substring(26));
                         return true;
                     }
                 }
@@ -242,10 +248,10 @@ public class FetchService extends IntentService {
         return true;
     }
 
-    private void send(){
-        Log.d("Fetch","Send");
+    private void send() {
         Intent intent = new Intent();
         intent.setAction(BROADCAST_ACTION);
+        intent.putExtra("message", "add");
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }

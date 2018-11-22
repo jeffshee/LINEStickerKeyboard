@@ -20,6 +20,10 @@ public class HistoryPack {
         }
     }
 
+    public void remove(int index){
+        stickers.remove(index);
+    }
+
     public int getId(int index) {
         return stickers.get(index).getId();
     }
