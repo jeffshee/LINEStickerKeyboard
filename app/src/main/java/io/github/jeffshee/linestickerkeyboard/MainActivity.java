@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 about();
                 break;
             default:
-                // TODO:
                 Toast.makeText(activity, "Stub", Toast.LENGTH_SHORT).show();
                 break;
         }

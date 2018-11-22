@@ -50,10 +50,11 @@ public class IMService extends InputMethodService {
         // Launch Main Activity for disclaimer
         if (!SharedPrefHelper.getDisclaimerStatus(this)) {
             Toast.makeText(this, getString(R.string.disclaimer_toast), Toast.LENGTH_SHORT).show();
-            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
             Intent intent = new Intent(this, MainActivity.class);
+            // Flag needed by older Android
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-        }else{
+        } else {
             boolean isPng = isCommitContentSupported(MIME_TYPE_PNG);
             boolean isGif = isCommitContentSupported(MIME_TYPE_GIF);
             if (sticker.getType() == Sticker.Type.STATIC) {
@@ -92,7 +93,10 @@ public class IMService extends InputMethodService {
         shareIntent.setPackage(editorInfo.packageName);
         shareIntent.setType(mimeType);
         shareIntent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(this, "io.github.jeffshee.linestickerkeyboard", file));
-        startActivity(Intent.createChooser(shareIntent, getString(R.string.share)));
+        Intent chooser = Intent.createChooser(shareIntent, getString(R.string.share));
+        // Flag needed by older Android
+        chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(chooser);
     }
 
     private boolean isCommitContentSupported(String mimeType) {
@@ -168,6 +172,8 @@ public class IMService extends InputMethodService {
                         switch (i) {
                             case 0:
                                 Intent intent = new Intent(IMService.this, MainActivity.class);
+                                // Flag needed by older Android
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 IMService.this.startActivity(intent);
                                 break;
                             case 1:

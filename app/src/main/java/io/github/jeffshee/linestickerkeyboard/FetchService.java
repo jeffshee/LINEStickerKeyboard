@@ -90,11 +90,11 @@ public class FetchService extends IntentService {
 
     private void handleActionFetch(String param1) {
         String resultMsg;
-        builder.setContentTitle("Fetching").setSmallIcon(R.mipmap.ic_launcher_round)
+        builder.setContentTitle("Fetching").setSmallIcon(R.mipmap.ic_launcher)
                 .setOngoing(true).setProgress(0, 0, true);
         notificationManager.notify(NOTIFICATION_ID, builder.build());
         if (fetch(param1)) {
-            builder.setContentTitle("Downloading").setSmallIcon(R.mipmap.ic_launcher_round)
+            builder.setContentTitle("Downloading").setSmallIcon(R.mipmap.ic_launcher)
                     .setOngoing(true).setProgress(0, 0, true);
             notificationManager.notify(NOTIFICATION_ID, builder.build());
             if (download()) {
@@ -104,7 +104,7 @@ public class FetchService extends IntentService {
                     resultMsg = "Operation completed";
                     send();
                 } else {
-                    builder.setContentTitle("Converting").setSmallIcon(R.mipmap.ic_launcher_round)
+                    builder.setContentTitle("Converting").setSmallIcon(R.mipmap.ic_launcher)
                             .setOngoing(true).setProgress(0, 0, true);
                     notificationManager.notify(NOTIFICATION_ID, builder.build());
                     if (convert()) {
@@ -117,7 +117,7 @@ public class FetchService extends IntentService {
             } else resultMsg = "Download failed";
         } else resultMsg = "Fetch failed";
         builder = new NotificationCompat.Builder(this, CHANNEL_ID);
-        builder.setContentTitle(resultMsg).setSmallIcon(R.mipmap.ic_launcher_round).setOngoing(false);
+        builder.setContentTitle(resultMsg).setSmallIcon(R.mipmap.ic_launcher).setOngoing(false);
         notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
@@ -212,7 +212,7 @@ public class FetchService extends IntentService {
                         outputStream.write(buffer, 0, numRead);
                     }
                     builder.setContentTitle(String.format(Locale.getDefault(), "Downloading (%d/%d)", id - firstId + 1, count))
-                            .setSmallIcon(R.mipmap.ic_launcher_round)
+                            .setSmallIcon(R.mipmap.ic_launcher)
                             .setOngoing(true).setProgress(count, id - firstId + 1, false);
                     notificationManager.notify(NOTIFICATION_ID, builder.build());
                     Log.d("Downloader", String.valueOf(id) + " downloaded");
@@ -241,7 +241,7 @@ public class FetchService extends IntentService {
             gif = new File(gifDir, String.valueOf(id) + ".gif");
             apng2Gif.start(png, gif);
             builder.setContentTitle(String.format(Locale.getDefault(), "Converting (%d/%d)", id - firstId + 1, count))
-                    .setSmallIcon(R.mipmap.ic_launcher_round)
+                    .setSmallIcon(R.mipmap.ic_launcher)
                     .setOngoing(true).setProgress(count, id - firstId + 1, false);
             notificationManager.notify(NOTIFICATION_ID, builder.build());
         }
