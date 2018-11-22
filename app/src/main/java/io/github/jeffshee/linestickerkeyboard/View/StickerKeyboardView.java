@@ -24,7 +24,7 @@ import io.github.jeffshee.linestickerkeyboard.Model.Sticker;
 import io.github.jeffshee.linestickerkeyboard.Model.StickerPack;
 import io.github.jeffshee.linestickerkeyboard.R;
 import io.github.jeffshee.linestickerkeyboard.Util.FileHelper;
-import io.github.jeffshee.linestickerkeyboard.Util.NewSharedPrefHelper;
+import io.github.jeffshee.linestickerkeyboard.Util.SharedPrefHelper;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -56,12 +56,12 @@ public class StickerKeyboardView extends LinearLayout {
         LayoutInflater.from(ctx).inflate(R.layout.keyboard_layout, this, true);
 
         // History Pack
-        historyPack = NewSharedPrefHelper.getHistoryFromPref(context);
+        historyPack = SharedPrefHelper.getHistoryFromPref(context);
         historyPackView = new HistoryPackView(context, historyPack);
         views.add(historyPackView);
 
         // Sticker Pack
-        stickerPacks = NewSharedPrefHelper.getStickerPacksFromPref(context);
+        stickerPacks = SharedPrefHelper.getStickerPacksFromPref(context);
         for (StickerPack stickerPack : stickerPacks) {
             views.add(new StickerPackView(context, stickerPack));
         }
@@ -130,12 +130,12 @@ public class StickerKeyboardView extends LinearLayout {
         views = new ArrayList<>();
 
         // History Pack
-        historyPack = NewSharedPrefHelper.getHistoryFromPref(context);
+        historyPack = SharedPrefHelper.getHistoryFromPref(context);
         historyPackView = new HistoryPackView(context, historyPack);
         views.add(historyPackView);
 
         // Sticker Pack
-        stickerPacks = NewSharedPrefHelper.getStickerPacksFromPref(context);
+        stickerPacks = SharedPrefHelper.getStickerPacksFromPref(context);
         for (StickerPack stickerPack : stickerPacks) {
             views.add(new StickerPackView(context, stickerPack));
         }

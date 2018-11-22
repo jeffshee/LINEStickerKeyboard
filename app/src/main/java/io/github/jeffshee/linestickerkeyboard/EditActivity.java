@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import io.github.jeffshee.linestickerkeyboard.Adapter.AdapterCallback;
 import io.github.jeffshee.linestickerkeyboard.Adapter.ListAdapter;
 import io.github.jeffshee.linestickerkeyboard.Model.StickerPack;
-import io.github.jeffshee.linestickerkeyboard.Util.NewSharedPrefHelper;
+import io.github.jeffshee.linestickerkeyboard.Util.SharedPrefHelper;
 
 import static io.github.jeffshee.linestickerkeyboard.FetchService.BROADCAST_ACTION;
 
@@ -47,7 +47,7 @@ public class EditActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        stickerPacks = NewSharedPrefHelper.getStickerPacksFromPref(this);
+        stickerPacks = SharedPrefHelper.getStickerPacksFromPref(this);
         listAdapter = new ListAdapter(this, stickerPacks);
         ItemTouchHelper.Callback callback = new AdapterCallback(listAdapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
@@ -133,7 +133,7 @@ public class EditActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if("add".equals(intent.getStringExtra("message"))){
-                stickerPacks = NewSharedPrefHelper.getStickerPacksFromPref(activity);
+                stickerPacks = SharedPrefHelper.getStickerPacksFromPref(activity);
                 listAdapter.setData(stickerPacks);
                 listAdapter.notifyDataSetChanged();
             }

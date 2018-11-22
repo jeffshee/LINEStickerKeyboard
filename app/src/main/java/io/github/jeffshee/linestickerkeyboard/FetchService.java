@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 import io.github.jeffshee.apng2gif.Apng2Gif;
 import io.github.jeffshee.linestickerkeyboard.Model.Sticker;
 import io.github.jeffshee.linestickerkeyboard.Model.StickerPack;
-import io.github.jeffshee.linestickerkeyboard.Util.NewSharedPrefHelper;
+import io.github.jeffshee.linestickerkeyboard.Util.SharedPrefHelper;
 
 public class FetchService extends IntentService {
     private static final String ACTION_FETCH = "io.github.jeffshee.linestickerkeyboard.action.FETCH";
@@ -99,7 +99,7 @@ public class FetchService extends IntentService {
             notificationManager.notify(NOTIFICATION_ID, builder.build());
             if (download()) {
                 if (type == Sticker.Type.STATIC) {
-                    NewSharedPrefHelper.addNewStickerPack(this,
+                    SharedPrefHelper.addNewStickerPack(this,
                             new StickerPack(new Sticker(type, firstId), count, storeId, title));
                     resultMsg = "Operation completed";
                     send();
@@ -108,7 +108,7 @@ public class FetchService extends IntentService {
                             .setOngoing(true).setProgress(0, 0, true);
                     notificationManager.notify(NOTIFICATION_ID, builder.build());
                     if (convert()) {
-                        NewSharedPrefHelper.addNewStickerPack(this,
+                        SharedPrefHelper.addNewStickerPack(this,
                                 new StickerPack(new Sticker(type, firstId), count, storeId, title));
                         resultMsg = "Operation completed";
                         send();

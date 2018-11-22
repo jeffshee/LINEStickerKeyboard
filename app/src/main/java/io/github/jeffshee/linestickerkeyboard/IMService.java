@@ -30,7 +30,7 @@ import java.io.File;
 
 import io.github.jeffshee.linestickerkeyboard.Model.Sticker;
 import io.github.jeffshee.linestickerkeyboard.Util.FileHelper;
-import io.github.jeffshee.linestickerkeyboard.Util.NewSharedPrefHelper;
+import io.github.jeffshee.linestickerkeyboard.Util.SharedPrefHelper;
 import io.github.jeffshee.linestickerkeyboard.View.StickerKeyboardView;
 
 public class IMService extends InputMethodService {
@@ -48,7 +48,7 @@ public class IMService extends InputMethodService {
      */
     public void postSticker(Sticker sticker, boolean saveHistory) {
         // Launch Main Activity for disclaimer
-        if (!NewSharedPrefHelper.getDisclaimerStatus(this)) {
+        if (!SharedPrefHelper.getDisclaimerStatus(this)) {
             Toast.makeText(this, getString(R.string.disclaimer_toast), Toast.LENGTH_SHORT).show();
             final AlertDialog.Builder builder = new AlertDialog.Builder(this);
             Intent intent = new Intent(this, MainActivity.class);
@@ -80,7 +80,7 @@ public class IMService extends InputMethodService {
 
             }
             if (saveHistory) {
-                NewSharedPrefHelper.addStickerToHistory(this, sticker);
+                SharedPrefHelper.addStickerToHistory(this, sticker);
                 stickerKeyboardView.refreshHistoryAdapter(sticker);
             }
         }

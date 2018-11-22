@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 import io.github.jeffshee.linestickerkeyboard.Model.HistoryPack;
 import io.github.jeffshee.linestickerkeyboard.Model.Sticker;
-import io.github.jeffshee.linestickerkeyboard.Util.NewSharedPrefHelper;
+import io.github.jeffshee.linestickerkeyboard.Util.SharedPrefHelper;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 .setPositiveButton(getString(R.string.positive_confirm), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        NewSharedPrefHelper.saveNewHistoryPack(activity, new HistoryPack(new ArrayList<Sticker>()));
+                        SharedPrefHelper.saveNewHistoryPack(activity, new HistoryPack(new ArrayList<Sticker>()));
                     }
                 })
                 .setNegativeButton(getString(R.string.negative_cancel), null);
@@ -94,14 +94,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void disclaimer() {
-        if(!NewSharedPrefHelper.getDisclaimerStatus(this)){
+        if(!SharedPrefHelper.getDisclaimerStatus(this)){
             final AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setCancelable(false).setTitle(getString(R.string.disclaimer))
                     .setMessage(getString(R.string.disclaimer_text))
                     .setPositiveButton(getString(R.string.positive_agree), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            NewSharedPrefHelper.saveDisclaimerStatus(activity, true);
+                            SharedPrefHelper.saveDisclaimerStatus(activity, true);
                         }
                     })
                     .setNegativeButton(getString(R.string.negative_disagree), new DialogInterface.OnClickListener() {

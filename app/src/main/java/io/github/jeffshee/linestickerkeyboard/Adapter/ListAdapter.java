@@ -24,7 +24,7 @@ import java.util.Collections;
 import io.github.jeffshee.linestickerkeyboard.Model.StickerPack;
 import io.github.jeffshee.linestickerkeyboard.R;
 import io.github.jeffshee.linestickerkeyboard.Util.FileHelper;
-import io.github.jeffshee.linestickerkeyboard.Util.NewSharedPrefHelper;
+import io.github.jeffshee.linestickerkeyboard.Util.SharedPrefHelper;
 
 import static io.github.jeffshee.linestickerkeyboard.FetchService.BROADCAST_ACTION;
 
@@ -77,12 +77,12 @@ public class ListAdapter extends RecyclerView.Adapter implements ItemTouchHelper
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // Remove deleted sticker from history
-                        NewSharedPrefHelper.cleanHistory(context, stickerPacks.get(index));
+                        SharedPrefHelper.cleanHistory(context, stickerPacks.get(index));
                         // Delete files
                         FileHelper.deleteFile(context, stickerPacks.get(index));
                         // Save changes
                         stickerPacks.remove(index);
-                        NewSharedPrefHelper.saveNewStickerPacks(context, stickerPacks);
+                        SharedPrefHelper.saveNewStickerPacks(context, stickerPacks);
                         // Notify adapter itself
                         notifyItemRemoved(index);
                         // Notify IMServer only
@@ -116,7 +116,7 @@ public class ListAdapter extends RecyclerView.Adapter implements ItemTouchHelper
                 Collections.swap(stickerPacks, i, i - 1);
             }
         }
-        NewSharedPrefHelper.saveNewStickerPacks(context, stickerPacks);
+        SharedPrefHelper.saveNewStickerPacks(context, stickerPacks);
         notifyItemMoved(fromPosition, toPosition);
         // Notify IMServer only
         Intent intent = new Intent();
