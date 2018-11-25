@@ -90,32 +90,32 @@ public class FetchService extends IntentService {
 
     private void handleActionFetch(String param1) {
         String resultMsg;
-        builder.setContentTitle("Fetching").setSmallIcon(R.mipmap.ic_launcher)
+        builder.setContentTitle(getString(R.string.fetch_fetching)).setSmallIcon(R.mipmap.ic_launcher)
                 .setOngoing(true).setProgress(0, 0, true);
         notificationManager.notify(NOTIFICATION_ID, builder.build());
         if (fetch(param1)) {
-            builder.setContentTitle("Downloading").setSmallIcon(R.mipmap.ic_launcher)
+            builder.setContentTitle(getString(R.string.fetch_downloading)).setSmallIcon(R.mipmap.ic_launcher)
                     .setOngoing(true).setProgress(0, 0, true);
             notificationManager.notify(NOTIFICATION_ID, builder.build());
             if (download()) {
                 if (type == Sticker.Type.STATIC) {
                     SharedPrefHelper.addNewStickerPack(this,
                             new StickerPack(new Sticker(type, firstId), count, storeId, title));
-                    resultMsg = "Operation completed";
+                    resultMsg = getString(R.string.fetch_completed);
                     send();
                 } else {
-                    builder.setContentTitle("Converting").setSmallIcon(R.mipmap.ic_launcher)
+                    builder.setContentTitle(getString(R.string.fetch_converting)).setSmallIcon(R.mipmap.ic_launcher)
                             .setOngoing(true).setProgress(0, 0, true);
                     notificationManager.notify(NOTIFICATION_ID, builder.build());
                     if (convert()) {
                         SharedPrefHelper.addNewStickerPack(this,
                                 new StickerPack(new Sticker(type, firstId), count, storeId, title));
-                        resultMsg = "Operation completed";
+                        resultMsg = getString(R.string.fetch_completed);
                         send();
-                    } else resultMsg = "Convert failed";
+                    } else resultMsg = getString(R.string.fetch_convert_failed);
                 }
-            } else resultMsg = "Download failed";
-        } else resultMsg = "Fetch failed";
+            } else resultMsg = getString(R.string.fetch_download_failed);
+        } else resultMsg = getString(R.string.fetch_fetch_failed);
         builder = new NotificationCompat.Builder(this, CHANNEL_ID);
         builder.setContentTitle(resultMsg).setSmallIcon(R.mipmap.ic_launcher).setOngoing(false);
         notificationManager.notify(NOTIFICATION_ID, builder.build());
@@ -211,7 +211,8 @@ public class FetchService extends IntentService {
                         }
                         outputStream.write(buffer, 0, numRead);
                     }
-                    builder.setContentTitle(String.format(Locale.getDefault(), "Downloading (%d/%d)", id - firstId + 1, count))
+                    builder.setContentTitle(String.format(Locale.getDefault(),
+                            getString(R.string.fetch_downloading) + " (%d/%d)", id - firstId + 1, count))
                             .setSmallIcon(R.mipmap.ic_launcher)
                             .setOngoing(true).setProgress(count, id - firstId + 1, false);
                     notificationManager.notify(NOTIFICATION_ID, builder.build());
@@ -240,7 +241,8 @@ public class FetchService extends IntentService {
             png = new File(pngDir, String.valueOf(id) + ".png");
             gif = new File(gifDir, String.valueOf(id) + ".gif");
             apng2Gif.start(png, gif);
-            builder.setContentTitle(String.format(Locale.getDefault(), "Converting (%d/%d)", id - firstId + 1, count))
+            builder.setContentTitle(String.format(Locale.getDefault(),
+                    getString(R.string.fetch_converting) + " (%d/%d)", id - firstId + 1, count))
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setOngoing(true).setProgress(count, id - firstId + 1, false);
             notificationManager.notify(NOTIFICATION_ID, builder.build());

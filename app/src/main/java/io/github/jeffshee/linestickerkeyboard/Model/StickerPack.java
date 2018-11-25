@@ -3,19 +3,8 @@ package io.github.jeffshee.linestickerkeyboard.Model;
 public class StickerPack {
     private Sticker firstSticker;
     private int count;
-    private int storeId;  //stub
-    private String title; //stub
-
-    public StickerPack(Sticker firstSticker, int count) {
-        this.firstSticker = firstSticker;
-        this.count = count;
-    }
-
-    public StickerPack(Sticker firstSticker, int count, String title) {
-        this.firstSticker = firstSticker;
-        this.count = count;
-        this.title = title;
-    }
+    private int storeId;
+    private String title;
 
     public StickerPack(Sticker firstSticker, int count, int storeId, String title) {
         this.firstSticker = firstSticker;

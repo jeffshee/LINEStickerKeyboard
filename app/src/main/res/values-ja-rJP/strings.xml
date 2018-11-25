@@ -29,4 +29,11 @@
     <string name="disclaimer">免責事項</string>
     <string name="disclaimer_text">当アプリの使用は、使用者自身の自己責任でなされるものであり、当アプリは一切の責任を負いません。</string>
     <string name="disclaimer_toast">免責事項に同意して下さい</string>
+    <string name="fetch_fetching">取得中</string>
+    <string name="fetch_downloading">ダウンロード中</string>
+    <string name="fetch_converting">変換中</string>
+    <string name="fetch_completed">オペレーション完了</string>
+    <string name="fetch_fetch_failed">取得失敗</string>
+    <string name="fetch_download_failed">ダウンロード失敗</string>
+    <string name="fetch_convert_failed">変換失敗</string>
 </resources>

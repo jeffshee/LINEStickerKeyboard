@@ -47,4 +47,12 @@
         endorsed or sponsored by the LINE Corporation or any of their affiliates.
         We take no resposibility or liability for using this app.</string>
     <string name="disclaimer_toast">Please agree to our disclaimer</string>
+    <string name="fetch_fetching">Fetching</string>
+    <string name="fetch_downloading">Downloading</string>
+    <string name="fetch_converting">Converting</string>
+    <string name="fetch_completed">Operation completed</string>
+    <string name="fetch_fetch_failed">Fetch failed</string>
+    <string name="fetch_download_failed">Download failed</string>
+    <string name="fetch_convert_failed">Convert failed</string>
+
 </resources>
