@@ -26,3 +26,5 @@ Launch LINE > Go to 'Sticker Shop' > Pick your sticker > Click at the 'share' bu
 
 Using your web browser, go to LINE's Sticker Shop > Pick your sticker > Look at the URL, for example: `https://store.line.me/stickershop/product/5417218/en` In this case, `5417218` will be the Store ID, remember this. Launch the app > go to My Collections > Click at the 'Manual Add' > Enter the Store ID
 
+## Credit
+Icon made by Freepik from www.flaticon.com 
