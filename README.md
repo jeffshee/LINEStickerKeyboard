@@ -14,7 +14,7 @@ _(predecessor: [Android Discord Line Stickers](https://github.com/jeffshee/ad-li
 Some serious stuff here... This app is making use of **preview images** from the official web page itself. All right go to their respective owners. As described above, this app aims to **port** your favorite stickers to other SNS you are using, not to **steal**! Please **don't** use this app on LINE itself, and **do** buy those stickers to show support to their authors! We hope you all play fair. 
 
 ## Download
-**This app wouldn't be available on Play Store**, sorry about that. Please refer to release section for the APK file. Or you can clone the source and build it yourself as well ;)
+**This app wouldn't be available on Play Store**, sorry about that. Please refer to [release](https://github.com/jeffshee/LINEStickerKeyboard/releases) section for the APK file. Or you can clone the source and build it yourself as well ;)
 
 ## How to use
 Since almost everything are pretty straight forward, here we only show **how to add sticker** to the keyboard. There are 2 ways:
