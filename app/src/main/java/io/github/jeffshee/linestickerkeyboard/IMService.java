@@ -46,7 +46,7 @@ public class IMService extends InputMethodService {
     /* ImageKeyboard Google Samples
      * https://github.com/googlesamples/android-CommitContentSampleIME/
      */
-    public void postSticker(Sticker sticker, boolean saveHistory) {
+    public void postSticker(Sticker sticker, boolean saveHistory, boolean forcePng) {
         // Launch Main Activity for disclaimer
         if (!SharedPrefHelper.getDisclaimerStatus(this)) {
             Toast.makeText(this, getString(R.string.disclaimer_toast), Toast.LENGTH_SHORT).show();
@@ -57,13 +57,13 @@ public class IMService extends InputMethodService {
         } else {
             boolean isPng = isCommitContentSupported(MIME_TYPE_PNG);
             boolean isGif = isCommitContentSupported(MIME_TYPE_GIF);
-            if (sticker.getType() == Sticker.Type.STATIC) {
+            if (sticker.getType() == Sticker.Type.STATIC || forcePng) {
                 if (isPng) {
-                    File file = FileHelper.getFile(this, sticker);
+                    File file = FileHelper.getPngFile(this, sticker.getId());
                     doCommitContent(file, MIME_TYPE_PNG);
                 } else {
                     Toast.makeText(this, getString(R.string.not_supported), Toast.LENGTH_SHORT).show();
-                    File file = FileHelper.getFile(this, sticker);
+                    File file = FileHelper.getPngFile(this, sticker.getId());
                     createShareIntent(file, MIME_TYPE_PNG);
                 }
             } else {

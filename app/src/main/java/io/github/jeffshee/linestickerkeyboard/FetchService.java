@@ -24,9 +24,9 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import io.github.jeffshee.apng2gif.Apng2Gif;
 import io.github.jeffshee.linestickerkeyboard.Model.Sticker;
 import io.github.jeffshee.linestickerkeyboard.Model.StickerPack;
+import io.github.jeffshee.linestickerkeyboard.Util.Apng2GifCustom;
 import io.github.jeffshee.linestickerkeyboard.Util.SharedPrefHelper;
 
 public class FetchService extends IntentService {
@@ -50,7 +50,7 @@ public class FetchService extends IntentService {
     NotificationManagerCompat notificationManager;
     File pngDir;
     File gifDir;
-    Apng2Gif apng2Gif;
+    Apng2GifCustom apng2GifCustom;
 
     public FetchService() {
         super("FetchService");
@@ -77,7 +77,7 @@ public class FetchService extends IntentService {
         notificationManager = NotificationManagerCompat.from(this);
         pngDir = new File(getFilesDir(), "png");
         gifDir = new File(getFilesDir(), "gif");
-        apng2Gif = new Apng2Gif();
+        apng2GifCustom = new Apng2GifCustom();
 
         if (intent != null) {
             final String action = intent.getAction();
@@ -240,7 +240,7 @@ public class FetchService extends IntentService {
         for (int id = firstId; id < firstId + count; id++) {
             png = new File(pngDir, String.valueOf(id) + ".png");
             gif = new File(gifDir, String.valueOf(id) + ".gif");
-            apng2Gif.start(png, gif);
+            apng2GifCustom.start(png, gif);
             builder.setContentTitle(String.format(Locale.getDefault(),
                     getString(R.string.fetch_converting) + " (%d/%d)", id - firstId + 1, count))
                     .setSmallIcon(R.mipmap.ic_launcher)
@@ -256,4 +256,5 @@ public class FetchService extends IntentService {
         intent.putExtra("message", "add");
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
+
 }

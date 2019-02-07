@@ -54,5 +54,6 @@
     <string name="fetch_fetch_failed">Fetch failed</string>
     <string name="fetch_download_failed">Download failed</string>
     <string name="fetch_convert_failed">Convert failed</string>
+    <string name="force_png">Sending this sticker as (A)PNG file</string>
 
 </resources>
