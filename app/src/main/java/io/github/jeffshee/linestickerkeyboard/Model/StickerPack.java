@@ -5,12 +5,14 @@ public class StickerPack {
     private int count;
     private int storeId;
     private String title;
+    private boolean visible;
 
     public StickerPack(Sticker firstSticker, int count, int storeId, String title) {
         this.firstSticker = firstSticker;
         this.count = count;
         this.storeId = storeId;
         this.title = title;
+        this.visible = true;
     }
 
     public int getFirstId() {
@@ -39,5 +41,13 @@ public class StickerPack {
 
     public String getTitle() {
         return title;
+    }
+
+    public boolean getVisible(){
+        return visible;
+    }
+
+    public void setVisible(boolean b){
+        visible = b;
     }
 }

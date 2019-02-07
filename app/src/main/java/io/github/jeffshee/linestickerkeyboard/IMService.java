@@ -153,7 +153,6 @@ public class IMService extends InputMethodService {
 
     @Override
     public void onStartInput(EditorInfo attribute, boolean restarting) {
-
         super.onStartInput(attribute, restarting);
     }
 
@@ -220,8 +219,9 @@ public class IMService extends InputMethodService {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (stickerKeyboardView != null)
-                stickerKeyboardView.refreshViewPager(context);
+            // Restart everything, thanks for this.
+            // https://stackoverflow.com/questions/20288655/how-to-restart-oncreateinputview
+            setInputView(onCreateInputView());
         }
     }
 }

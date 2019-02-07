@@ -37,10 +37,6 @@ public class StickerKeyboardView extends LinearLayout {
     ArrayList<View> views = new ArrayList<>();
     HistoryPackView historyPackView;
     private HistoryPack historyPack;
-    private ArrayList<StickerPack> stickerPacks;
-    private StickerViewPagerAdapter adapter;
-    private ViewPager viewPager;
-    private TabLayout tabLayout;
 
     public StickerKeyboardView(Context context) {
         super(context);
@@ -61,16 +57,19 @@ public class StickerKeyboardView extends LinearLayout {
         views.add(historyPackView);
 
         // Sticker Pack
-        stickerPacks = SharedPrefHelper.getStickerPacksFromPref(context);
-        for (StickerPack stickerPack : stickerPacks) {
-            views.add(new StickerPackView(context, stickerPack));
+        ArrayList<StickerPack> stickerPacksFiltered = new ArrayList<>();
+        for (StickerPack stickerPack : SharedPrefHelper.getStickerPacksFromPref(context)) {
+            if (stickerPack.getVisible()) {
+                stickerPacksFiltered.add(stickerPack);
+                views.add(new StickerPackView(context, stickerPack));
+            }
         }
 
         // TabLayout
-        viewPager = findViewById(R.id.container);
-        tabLayout = findViewById(R.id.tabLayout);
+        ViewPager viewPager = findViewById(R.id.container);
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
 
-        adapter = new StickerViewPagerAdapter(views);
+        StickerViewPagerAdapter adapter = new StickerViewPagerAdapter(views);
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
@@ -84,7 +83,7 @@ public class StickerKeyboardView extends LinearLayout {
                 if (i == 0)
                     icon.setImageDrawable(getResources().getDrawable(R.drawable.baseline_history_white_36));
                 else {
-                    File file = FileHelper.getPngFile(context, stickerPacks.get(i - 1).getFirstId());
+                    File file = FileHelper.getPngFile(context, stickerPacksFiltered.get(i - 1).getFirstId());
                     Glide.with(this).load(file).into(icon);
                 }
                 TabLayout.Tab tab = tabLayout.getTabAt(i);
@@ -95,7 +94,7 @@ public class StickerKeyboardView extends LinearLayout {
         // Default Tab
         if (historyPack.size() != 0) {
             viewPager.setCurrentItem(0);
-        } else if (stickerPacks.size() > 0) {
+        } else if (stickerPacksFiltered.size() > 0) {
             viewPager.setCurrentItem(1);
         }
 
@@ -124,47 +123,6 @@ public class StickerKeyboardView extends LinearLayout {
     public void refreshHistoryAdapter(Sticker sticker) {
         historyPack.add(sticker);
         historyPackView.adapter.update(historyPack);
-    }
-
-    public void refreshViewPager(Context context) {
-        views = new ArrayList<>();
-
-        // History Pack
-        historyPack = SharedPrefHelper.getHistoryFromPref(context);
-        historyPackView = new HistoryPackView(context, historyPack);
-        views.add(historyPackView);
-
-        // Sticker Pack
-        stickerPacks = SharedPrefHelper.getStickerPacksFromPref(context);
-        for (StickerPack stickerPack : stickerPacks) {
-            views.add(new StickerPackView(context, stickerPack));
-        }
-
-        adapter.update(views);
-
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        for (int i = 0; i < tabLayout.getTabCount(); i++) {
-            View view;
-            if (inflater != null) {
-                view = inflater.inflate(R.layout.item_tab_icon, null);
-                ImageView icon = view.findViewById(R.id.textView);
-                if (i == 0)
-                    icon.setImageDrawable(getResources().getDrawable(R.drawable.baseline_history_white_36));
-                else {
-                    File file = FileHelper.getPngFile(context, stickerPacks.get(i - 1).getFirstId());
-                    Glide.with(this).load(file).into(icon);
-                }
-                TabLayout.Tab tab = tabLayout.getTabAt(i);
-                if (tab != null) tab.setCustomView(view);
-            }
-        }
-
-        // Default Tab
-        if (historyPack.size() != 0) {
-            viewPager.setCurrentItem(0);
-        } else if (stickerPacks.size() > 0) {
-            viewPager.setCurrentItem(1);
-        }
     }
 }
 

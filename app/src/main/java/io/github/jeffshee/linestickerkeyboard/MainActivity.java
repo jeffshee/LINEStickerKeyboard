@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 import io.github.jeffshee.linestickerkeyboard.Model.HistoryPack;
 import io.github.jeffshee.linestickerkeyboard.Model.Sticker;
 import io.github.jeffshee.linestickerkeyboard.Util.SharedPrefHelper;
+
+import static io.github.jeffshee.linestickerkeyboard.FetchService.BROADCAST_ACTION;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
@@ -74,6 +77,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         SharedPrefHelper.saveNewHistoryPack(activity, new HistoryPack(new ArrayList<Sticker>()));
+                        // Notify IMServer only
+                        Intent intent = new Intent();
+                        intent.setAction(BROADCAST_ACTION);
+                        intent.putExtra("message", "refresh");
+                        LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
                     }
                 })
                 .setNegativeButton(getString(R.string.negative_cancel), null);
