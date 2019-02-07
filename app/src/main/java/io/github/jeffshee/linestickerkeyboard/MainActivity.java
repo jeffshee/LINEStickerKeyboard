@@ -6,25 +6,31 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import cn.nekocode.badge.BadgeDrawable;
 import io.github.jeffshee.linestickerkeyboard.Model.HistoryPack;
 import io.github.jeffshee.linestickerkeyboard.Model.Sticker;
 import io.github.jeffshee.linestickerkeyboard.Util.SharedPrefHelper;
+
+import static io.github.jeffshee.linestickerkeyboard.FetchService.BROADCAST_ACTION;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     private static final String TRACKER = "https://github.com/jeffshee/LINEStickerKeyboard/issues";
     private static final String HP = "https://github.com/jeffshee/LINEStickerKeyboard";
+    private static final String README = "https://github.com/jeffshee/LINEStickerKeyboard/blob/master/README.md";
 
     Activity activity = this;
 
@@ -37,6 +43,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         listView.setAdapter(new ArrayAdapter<>(this,
                 android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.main_activity_list)));
         listView.setOnItemClickListener(this);
+        ImageView footer = findViewById(R.id.footer);
+        footer.setImageDrawable(new
+                BadgeDrawable.Builder()
+                .type(BadgeDrawable.TYPE_WITH_TWO_TEXT_COMPLEMENTARY)
+                .badgeColor(getResources().getColor(R.color.md_deep_purple_900))
+                .text1(getString(R.string.app_name))
+                .text2(BuildConfig.VERSION_NAME)
+                .build());
     }
 
     @Override
@@ -74,6 +88,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         SharedPrefHelper.saveNewHistoryPack(activity, new HistoryPack(new ArrayList<Sticker>()));
+                        // Notify IMServer only
+                        Intent intent = new Intent();
+                        intent.setAction(BROADCAST_ACTION);
+                        intent.putExtra("message", "refresh");
+                        LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
                     }
                 })
                 .setNegativeButton(getString(R.string.negative_cancel), null);
@@ -87,13 +106,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void about() {
-        Uri uri = Uri.parse(HP);
+        Uri uri = Uri.parse(README);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
     }
 
     private void disclaimer() {
-        if(!SharedPrefHelper.getDisclaimerStatus(this)){
+        if (!SharedPrefHelper.getDisclaimerStatus(this)) {
             final AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setCancelable(false).setTitle(getString(R.string.disclaimer))
                     .setMessage(getString(R.string.disclaimer_text))

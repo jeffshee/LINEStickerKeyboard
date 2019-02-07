@@ -11,9 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
 
@@ -64,8 +66,22 @@ public class ListAdapter extends RecyclerView.Adapter implements ItemTouchHelper
             public void onClick(View view) {
                 int i = stickerPacks.indexOf((StickerPack) stickerViewHolder.itemView.getTag());
                 Toast.makeText(context,
-                        context.getString(R.string.store_id)+" "+
+                        context.getString(R.string.store_id) + " " +
                                 stickerPacks.get(i).getStoreId(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        stickerViewHolder.toggle.setChecked(stickerPacks.get(i).getVisible());
+        stickerViewHolder.toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                int i = stickerPacks.indexOf((StickerPack) stickerViewHolder.itemView.getTag());
+                stickerPacks.get(i).setVisible(isChecked);
+                SharedPrefHelper.saveNewStickerPacks(context, stickerPacks);
+                // Notify IMServer only
+                Intent intent = new Intent();
+                intent.setAction(BROADCAST_ACTION);
+                intent.putExtra("message", "refresh");
+                LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
             }
         });
     }
@@ -135,12 +151,14 @@ public class ListAdapter extends RecyclerView.Adapter implements ItemTouchHelper
         private ImageView imageView;
         private TextView textView;
         private Button button;
+        private ToggleButton toggle;
 
         ListViewHolder(View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.imageView);
             textView = itemView.findViewById(R.id.textView);
             button = itemView.findViewById(R.id.btnDelete);
+            toggle = itemView.findViewById(R.id.toggle_visibility);
         }
     }
 }

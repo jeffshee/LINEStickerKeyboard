@@ -36,4 +36,5 @@
     <string name="fetch_fetch_failed">取得失敗</string>
     <string name="fetch_download_failed">ダウンロード失敗</string>
     <string name="fetch_convert_failed">変換失敗</string>
+    <string name="force_png">スタンプを(A)PNGファイルとして送信されます</string>
 </resources>

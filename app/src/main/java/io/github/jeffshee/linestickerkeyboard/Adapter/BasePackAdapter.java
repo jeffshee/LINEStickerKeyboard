@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
@@ -70,8 +71,19 @@ public abstract class BasePackAdapter extends RecyclerView.Adapter {
             @Override
             public void onClick(View view) {
                 if (service != null) {
-                    service.postSticker((Sticker) stickerViewHolder.itemView.getTag(), saveHistory());
+                    service.postSticker((Sticker) stickerViewHolder.itemView.getTag(), saveHistory(), false);
                 }
+            }
+        });
+        // LongClick to force sending stickers as (A)PNG files
+        stickerViewHolder.imageView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (service != null) {
+                    Toast.makeText(context, context.getString(R.string.force_png), Toast.LENGTH_SHORT).show();
+                    service.postSticker((Sticker) stickerViewHolder.itemView.getTag(), saveHistory(), true);
+                }
+                return true;
             }
         });
     }
