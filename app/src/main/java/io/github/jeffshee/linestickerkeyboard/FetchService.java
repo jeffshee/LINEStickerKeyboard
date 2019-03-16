@@ -139,34 +139,37 @@ public class FetchService extends IntentService {
             try {
                 final String url = matcher.group(0);
                 Document document = Jsoup.connect(url).get();
-                // Check type
-                Element element = document.getElementsByClass("mdCMN08Img").first();
-                if (element.children().hasClass("MdIcoPlay_b") || element.children().hasClass("MdIcoAni_b")) {
-                    Log.d("Fetcher", "Animated type detected");
-                    type = Sticker.Type.ANIMATED;
-                } else if (element.children().hasClass("MdIcoFlash_b") || element.children().hasClass("MdIcoFlashAni_b")) {
-                    Log.d("Fetcher", "Popup type detected");
-                    type = Sticker.Type.POPUP;
-                } else {
-                    type = Sticker.Type.STATIC;
-                    Log.d("Fetcher", "Static type detected");
-                }
-                // Get firstId and count
-                Elements elements = document.getElementsByClass("mdCMN09Image");
-                if (elements.size() > 0) {
-                    String s = elements.first().attr("style");
-                    count = elements.size();
-                    pattern = Pattern.compile("/(\\d+?)/");
-                    matcher = pattern.matcher(s);
-                    if (matcher.find()) {
-                        firstId = Integer.valueOf(matcher.group(1));
-                        Log.d("Fetcher", "firstId: " + firstId + " count: " + count);
-                        // Get Title ;)
-                        element = document.getElementsByClass("mdCMN08Ttl").first();
-                        title = element.text();
-                        // Get StoreId ;)
-                        storeId = Integer.parseInt(url.substring(26));
-                        return true;
+                // NOTE: Changed 3/17 mdCMN08Img -> mdCMN38Img, mdCMN08Ttl -> mdCMN38Item01Ttl, failure check added
+                Element element = document.getElementsByClass("mdCMN38Img").first();
+                if (element != null) {
+                    // Check type
+                    if (element.children().hasClass("MdIcoPlay_b") || element.children().hasClass("MdIcoAni_b")) {
+                        Log.d("Fetcher", "Animated type detected");
+                        type = Sticker.Type.ANIMATED;
+                    } else if (element.children().hasClass("MdIcoFlash_b") || element.children().hasClass("MdIcoFlashAni_b")) {
+                        Log.d("Fetcher", "Popup type detected");
+                        type = Sticker.Type.POPUP;
+                    } else {
+                        type = Sticker.Type.STATIC;
+                        Log.d("Fetcher", "Static type detected");
+                    }
+                    // Get firstId and count
+                    Elements elements = document.getElementsByClass("mdCMN09Image");
+                    if (elements.size() > 0) {
+                        String s = elements.first().attr("style");
+                        count = elements.size();
+                        pattern = Pattern.compile("/(\\d+?)/");
+                        matcher = pattern.matcher(s);
+                        if (matcher.find()) {
+                            firstId = Integer.valueOf(matcher.group(1));
+                            Log.d("Fetcher", "firstId: " + firstId + " count: " + count);
+                            // Get StoreId ;)
+                            storeId = Integer.parseInt(url.substring(26));
+                            // Get Title ;)
+                            element = document.getElementsByClass("mdCMN38Item01Ttl").first();
+                            title = (element != null ? element.text() : "Sticker #" + storeId);
+                            return true;
+                        }
                     }
                 }
             } catch (IOException e) {
