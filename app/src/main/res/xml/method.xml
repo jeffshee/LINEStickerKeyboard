@@ -1,5 +1,16 @@
 <input-method
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:settingsActivity="io.github.jeffshee.linestickerkeyboard.MainActivity"
-    android:icon="@mipmap/ic_launcher">
+    android:icon="@mipmap/ic_launcher"
+    >
+
+    <!-- Create an IME subtype example
+    <subtype
+        android:label="@string/label_subtype_generic"
+        android:imeSubtypeLocale="en_US"
+        android:icon="@drawable/icon_en_us"
+        android:imeSubtypeMode="keyboard" />
+    -->
+    <subtype
+        android:imeSubtypeMode="keyboard" />
 </input-method>
