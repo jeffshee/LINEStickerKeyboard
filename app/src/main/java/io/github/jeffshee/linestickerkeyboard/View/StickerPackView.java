@@ -15,7 +15,7 @@ public class StickerPackView extends BasePackView {
     public StickerPackView(Context context, StickerPack stickerPack) {
         super(context);
         adapter = new StickerAdapter(context, stickerPack);
-        recyclerView.setAdapter(adapter);
+        setUpRecyclerViewForSticker(adapter);
     }
 
 }

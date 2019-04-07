@@ -3,11 +3,14 @@ package io.github.jeffshee.linestickerkeyboard.View;
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.util.DisplayMetrics;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 
+import io.github.jeffshee.linestickerkeyboard.Adapter.HistoryAdapter;
+import io.github.jeffshee.linestickerkeyboard.Adapter.StickerAdapter;
 import io.github.jeffshee.linestickerkeyboard.R;
 
 public class BasePackView extends LinearLayout {
@@ -35,6 +38,22 @@ public class BasePackView extends LinearLayout {
         int span = (int) Math.floor(viewWidth / itemWidth);
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(context, span);
         recyclerView.setLayoutManager(gridLayoutManager);
+    }
+
+    protected void setUpRecyclerViewForHistory(HistoryAdapter adapter) {
+        //LinearLayoutManager layoutManagerStart = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        //recyclerView.setLayoutManager(layoutManagerStart);
+        recyclerView.setAdapter(adapter);
+        SnapHelper snapHelperStart = new StartSnapHelper();
+        snapHelperStart.attachToRecyclerView(recyclerView);
+    }
+
+    protected void setUpRecyclerViewForSticker(StickerAdapter adapter) {
+        //LinearLayoutManager layoutManagerStart = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        //recyclerView.setLayoutManager(layoutManagerStart);
+        recyclerView.setAdapter(adapter);
+        SnapHelper snapHelperStart = new StartSnapHelper();
+        snapHelperStart.attachToRecyclerView(recyclerView);
     }
 
 }

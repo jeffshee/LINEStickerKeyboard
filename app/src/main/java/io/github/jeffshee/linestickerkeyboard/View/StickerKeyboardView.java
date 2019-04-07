@@ -124,5 +124,6 @@ public class StickerKeyboardView extends LinearLayout {
         historyPack.add(sticker);
         historyPackView.adapter.update(historyPack);
     }
+
 }
 
