@@ -30,14 +30,16 @@ public class GravitySnapHelper extends SnapHelper {
     private static final float VIEW_HALF_VISIBLE = 0.5f;
 
     private final int gravity;
+    private final int span;
     private OrientationHelper verticalHelper;
     private OrientationHelper horizontalHelper;
 
-    public GravitySnapHelper(final int gravity) {
+    public GravitySnapHelper(final int gravity, final int span) {
         if (gravity != Gravity.START && gravity != Gravity.END && gravity != Gravity.BOTTOM && gravity != Gravity.TOP) {
             throw new IllegalArgumentException("Invalid gravity value. Use START " + "| END | BOTTOM | TOP constants");
         }
         this.gravity = gravity;
+        this.span = span;
     }
 
     /***
@@ -241,7 +243,7 @@ public class GravitySnapHelper extends SnapHelper {
                     // to avoid having the first item not completely visible.
                     boolean startOfList = ((LinearLayoutManager) layoutManager).findFirstCompletelyVisibleItemPosition() == 0;
                     if (!startOfList) {
-                        targetView = layoutManager.findViewByPosition(lastChildPos - 3);
+                        targetView = layoutManager.findViewByPosition(lastChildPos - span);
                     }
                 }
             }
@@ -278,7 +280,7 @@ public class GravitySnapHelper extends SnapHelper {
                     if (!endOfList) {
                         // If the firstView wasn't returned, we need to return
                         // the next view closest to the start.
-                        targetView = layoutManager.findViewByPosition(firstChildPos + 3);
+                        targetView = layoutManager.findViewByPosition(firstChildPos + span);
                     }
                 }
             }
