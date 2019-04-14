@@ -3,8 +3,9 @@ package io.github.jeffshee.linestickerkeyboard;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -46,8 +47,8 @@ public class FetchService extends IntentService {
     int firstId = 0, count = 0, storeId = 0;
     String title = "";
     Sticker.Type type;
+    NotificationManager notificationManager;
     NotificationCompat.Builder builder;
-    NotificationManagerCompat notificationManager;
     File pngDir;
     File gifDir;
     Apng2GifCustom apng2GifCustom;
@@ -73,8 +74,20 @@ public class FetchService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+            notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         builder = new NotificationCompat.Builder(this, CHANNEL_ID);
-        notificationManager = NotificationManagerCompat.from(this);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "LINE", NotificationManager.IMPORTANCE_DEFAULT);
+
+            // Configure the notification channel.
+            notificationChannel.setDescription("Channel description");
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.GREEN);
+            notificationChannel.setVibrationPattern(new long[]{0, 5000, 200, 5000});
+            notificationChannel.enableVibration(true);
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
         pngDir = new File(getFilesDir(), "png");
         gifDir = new File(getFilesDir(), "gif");
         apng2GifCustom = new Apng2GifCustom();
