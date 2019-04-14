@@ -56,5 +56,6 @@
     <string name="fetch_convert_failed">Convert failed</string>
     <string name="force_png">Sending this sticker as (A)PNG file</string>
     <string name="footer" translatable="false">LINEStickerKeyboard ver 1.3</string>
+    <string name="channel_name">Download</string>
 
 </resources>

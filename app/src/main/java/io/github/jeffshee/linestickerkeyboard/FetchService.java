@@ -1,10 +1,11 @@
 package io.github.jeffshee.linestickerkeyboard;
 
 import android.app.IntentService;
-import android.content.Context;
-import android.content.Intent;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -34,7 +35,7 @@ public class FetchService extends IntentService {
     private static final String ACTION_FETCH = "io.github.jeffshee.linestickerkeyboard.action.FETCH";
     private static final String EXTRA_PARAM1 = "io.github.jeffshee.linestickerkeyboard.extra.PARAM1";
 
-    private static final String CHANNEL_ID = "DOWNLOAD";
+    private static final String CHANNEL_ID = "io.github.jeffshee.linestickerkeyboard.DOWNLOAD";
     private static final int NOTIFICATION_ID = 0;
 
     private static final String URL_COMMON = "https://stickershop.line-scdn.net/stickershop/v1/sticker/";
@@ -74,18 +75,13 @@ public class FetchService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-            notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         builder = new NotificationCompat.Builder(this, CHANNEL_ID);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, "LINE", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID,
+                    getString(R.string.channel_name), NotificationManager.IMPORTANCE_LOW);
 
-            // Configure the notification channel.
-            notificationChannel.setDescription("Channel description");
-            notificationChannel.enableLights(true);
-            notificationChannel.setLightColor(Color.GREEN);
-            notificationChannel.setVibrationPattern(new long[]{0, 5000, 200, 5000});
-            notificationChannel.enableVibration(true);
             notificationManager.createNotificationChannel(notificationChannel);
         }
         pngDir = new File(getFilesDir(), "png");
