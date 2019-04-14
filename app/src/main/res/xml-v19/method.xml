@@ -11,5 +11,6 @@
     -->
     <subtype
         android:icon="@mipmap/ic_launcher"
-        android:imeSubtypeMode="keyboard" />
+        android:imeSubtypeMode="keyboard"
+        android:isAsciiCapable="false" />
 </input-method>

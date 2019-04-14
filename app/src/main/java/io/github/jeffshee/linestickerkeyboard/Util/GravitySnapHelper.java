@@ -1,4 +1,4 @@
-package io.github.jeffshee.linestickerkeyboard.SnapHelper;
+package io.github.jeffshee.linestickerkeyboard.Util;
 
 import android.graphics.PointF;
 import android.support.annotation.NonNull;
@@ -13,14 +13,14 @@ import android.view.View;
 /**
  * Created by tim on 25.09.16.
  * A {@link SnapHelper} that can snap using {@link Gravity}
- *
+ * <p>
  * for example:
  *
  * <code>
- *      final GravitySnapHelper gravitySnapHelper = new GravitySnapHelper(Gravity.START);
- *      gravitySnapHelper.attachToRecyclerView(recyclerView);
+ * final GravitySnapHelper gravitySnapHelper = new GravitySnapHelper(Gravity.START);
+ * gravitySnapHelper.attachToRecyclerView(recyclerView);
  * </code>
- *
+ * <p>
  * Will find the first {@link View} and snap to it.
  * Supported Gravities are Gravity.START, Gravity.END, Gravity.TOP, Gravity.BOTTOM
  */
@@ -43,7 +43,7 @@ public class GravitySnapHelper extends SnapHelper {
     }
 
     /***
-     * Well composition does not work so we copy this method from {@link LinearSnapHelper}.
+     * Well composition does not work so we copy this method from LinearSnapHelper
      * That sucks!
      *
      * @param layoutManager
@@ -127,8 +127,7 @@ public class GravitySnapHelper extends SnapHelper {
      *
      * @param layoutManager the {@link RecyclerView.LayoutManager} associated with the attached
      *                      {@link RecyclerView}
-     * @param targetView the target view that is chosen as the view to snap
-     *
+     * @param targetView    the target view that is chosen as the view to snap
      * @return the output coordinates the put the result into. out[0] is the distance
      * on horizontal axis and out[1] is the distance on vertical axis.
      */
@@ -153,7 +152,6 @@ public class GravitySnapHelper extends SnapHelper {
      *
      * @param layoutManager the {@link RecyclerView.LayoutManager} associated with the attached
      *                      {@link RecyclerView}
-     *
      * @return the target view to which to snap on fling or end of scroll
      */
     @Nullable
@@ -216,11 +214,12 @@ public class GravitySnapHelper extends SnapHelper {
     //</editor-fold>
 
     //<editor-fold desc="View finders">
+
     /**
      * Searches for the last visible item in the adapter.
      * Checks if it is visible enough (more than half) and returns the view.
      * If the view was not visible enough it will return the previous view in line.
-     *
+     * <p>
      * If we are at the end of the list we return null so no snapping occurs
      *
      * @param layoutManager
@@ -255,7 +254,7 @@ public class GravitySnapHelper extends SnapHelper {
      * Searches for the first visible item in the adapter.
      * Checks if it is visible enough (more than half) and returns the view.
      * If the view was not visible enough it will return the next view in line.
-     *
+     * <p>
      * If we are at the end of the list we return null so no snapping occurs
      *
      * @param layoutManager
