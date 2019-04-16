@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
@@ -21,6 +22,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import io.github.jeffshee.linestickerkeyboard.Adapter.StickerViewPagerAdapter;
+import io.github.jeffshee.linestickerkeyboard.BuildConfig;
 import io.github.jeffshee.linestickerkeyboard.IMService;
 import io.github.jeffshee.linestickerkeyboard.Model.HistoryPack;
 import io.github.jeffshee.linestickerkeyboard.Model.Sticker;
@@ -113,7 +115,7 @@ public class StickerKeyboardView extends LinearLayout implements View.OnClickLis
             }
         });
 
-        // Setting Panel and buttons
+        // Setting Panel and buttons etc.
         panel = findViewById(R.id.panel);
         panel.setVisibility(INVISIBLE);
         Button btnMenu = findViewById(R.id.btnMenu);
@@ -121,6 +123,9 @@ public class StickerKeyboardView extends LinearLayout implements View.OnClickLis
         panel.setOnClickListener(this);
         btnMenu.setOnClickListener(this);
         btnSwitch.setOnClickListener(this);
+        TextView tvVersion = findViewById(R.id.tvVersion);
+        String verInfo = String.format("%s %s", imService.getString(R.string.app_name), BuildConfig.VERSION_NAME);
+        tvVersion.setText(verInfo);
     }
 
     public void refreshHistoryAdapter(Sticker sticker) {

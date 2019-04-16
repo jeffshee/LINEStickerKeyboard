@@ -200,6 +200,20 @@ public class IMService extends InputMethodService {
         //
     }
 
+    public void launchMainMenu(){
+        Intent intent = new Intent(IMService.this, MainActivity.class);
+        // Flag needed by older Android
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        IMService.this.startActivity(intent);
+    }
+
+    public void showIMPicker(){
+        InputMethodManager im = (InputMethodManager) IMService.this.getSystemService(INPUT_METHOD_SERVICE);
+        if (im != null) {
+            im.showInputMethodPicker();
+        }
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
