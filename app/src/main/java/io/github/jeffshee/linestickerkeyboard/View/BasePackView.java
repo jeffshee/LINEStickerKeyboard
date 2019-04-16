@@ -5,13 +5,18 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 
+import io.github.jeffshee.linestickerkeyboard.Adapter.HistoryAdapter;
+import io.github.jeffshee.linestickerkeyboard.Adapter.StickerAdapter;
 import io.github.jeffshee.linestickerkeyboard.R;
+import io.github.jeffshee.linestickerkeyboard.Util.GravitySnapHelper;
 
 public class BasePackView extends LinearLayout {
     protected RecyclerView recyclerView;
+    protected int span;
 
     public BasePackView(Context context) {
         super(context);
@@ -32,9 +37,21 @@ public class BasePackView extends LinearLayout {
                 / displayMetrics.density;
         float itemWidth = (getResources().getDimension(R.dimen.sticker_size)
                 + getResources().getDimension(R.dimen.default_padding)) / displayMetrics.density;
-        int span = (int) Math.floor(viewWidth / itemWidth);
+        span = (int) Math.floor(viewWidth / itemWidth);
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(context, span);
         recyclerView.setLayoutManager(gridLayoutManager);
+    }
+
+    protected void setUpRecyclerViewForHistory(HistoryAdapter adapter) {
+        recyclerView.setAdapter(adapter);
+        GravitySnapHelper gravitySnapHelper = new GravitySnapHelper(Gravity.TOP, span);
+        gravitySnapHelper.attachToRecyclerView(recyclerView);
+    }
+
+    protected void setUpRecyclerViewForSticker(StickerAdapter adapter) {
+        recyclerView.setAdapter(adapter);
+        GravitySnapHelper gravitySnapHelper = new GravitySnapHelper(Gravity.TOP, span);
+        gravitySnapHelper.attachToRecyclerView(recyclerView);
     }
 
 }

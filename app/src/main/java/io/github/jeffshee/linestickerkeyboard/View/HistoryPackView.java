@@ -15,7 +15,7 @@ public class HistoryPackView extends BasePackView {
     public HistoryPackView(Context context, HistoryPack historyPack) {
         super(context);
         adapter = new HistoryAdapter(context, historyPack);
-        recyclerView.setAdapter(adapter);
+        setUpRecyclerViewForHistory(adapter);
     }
 
 }
