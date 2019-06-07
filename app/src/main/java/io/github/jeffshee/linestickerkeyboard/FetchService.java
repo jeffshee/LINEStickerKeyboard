@@ -163,7 +163,8 @@ public class FetchService extends IntentService {
                         Log.d("Fetcher", "Static type detected");
                     }
                     // Get firstId and count
-                    Elements elements = document.getElementsByClass("mdCMN09Image");
+                    // NOTE: Changed 6/7 mdCMN09Image -> mdCMN09Image FnPreview
+                    Elements elements = document.getElementsByClass("mdCMN09Image FnPreview");
                     if (elements.size() > 0) {
                         String s = elements.first().attr("style");
                         count = elements.size();
