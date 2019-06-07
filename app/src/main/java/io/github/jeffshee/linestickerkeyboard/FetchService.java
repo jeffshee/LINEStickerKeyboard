@@ -193,7 +193,7 @@ public class FetchService extends IntentService {
         if (pngDir.mkdirs()) Log.d("Download", "pngDir created");
 
         for (int id = firstId; id < firstId + count; id++) {
-            final File outputFile = new File(pngDir, String.valueOf(id) + ".png");
+            final File outputFile = new File(pngDir, id + ".png");
             final byte[] buffer = new byte[1024];
             InputStream inputStream = null;
             OutputStream outputStream = null;
@@ -229,7 +229,7 @@ public class FetchService extends IntentService {
                             .setSmallIcon(R.mipmap.ic_launcher)
                             .setOngoing(true).setProgress(count, id - firstId + 1, false);
                     notificationManager.notify(NOTIFICATION_ID, builder.build());
-                    Log.d("Downloader", String.valueOf(id) + " downloaded");
+                    Log.d("Downloader", id + " downloaded");
                 } finally {
                     if (inputStream != null) {
                         inputStream.close();
@@ -251,8 +251,8 @@ public class FetchService extends IntentService {
         if (gifDir.mkdirs()) Log.d("Download", "gifDir created");
         File png, gif;
         for (int id = firstId; id < firstId + count; id++) {
-            png = new File(pngDir, String.valueOf(id) + ".png");
-            gif = new File(gifDir, String.valueOf(id) + ".gif");
+            png = new File(pngDir, id + ".png");
+            gif = new File(gifDir, id + ".gif");
             apng2GifCustom.start(png, gif);
             builder.setContentTitle(String.format(Locale.getDefault(),
                     getString(R.string.fetch_converting) + " (%d/%d)", id - firstId + 1, count))
