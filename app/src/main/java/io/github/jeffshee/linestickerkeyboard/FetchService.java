@@ -43,6 +43,12 @@ public class FetchService extends IntentService {
     private static final String ANIMATED_URL_FORMAT = URL_COMMON + "%d/IOS/sticker_animation@2x.png;compress=true";
     private static final String POPUP_URL_FORMAT = URL_COMMON + "%d/IOS/sticker_popup.png;compress=true";
 
+    // Fallback URL ("android" has a lower resolution than "IOS" or "iphone")
+    private static final String STATIC_URL_FORMAT_2 = URL_COMMON + "%d/android/sticker.png;compress=true";
+    private static final String ANIMATED_URL_FORMAT_2 = URL_COMMON + "%d/android/sticker_animation.png;compress=true";
+    private static final String POPUP_URL_FORMAT_2 = URL_COMMON + "%d/android/sticker_popup.png;compress=true";
+
+
     public static final String BROADCAST_ACTION = "io.github.jeffshee.linestickerkeyboard.REFRESH";
 
     int firstId = 0, count = 0, storeId = 0;
@@ -202,13 +208,13 @@ public class FetchService extends IntentService {
                 try {
                     switch (type) {
                         case STATIC:
-                            url = new URL(String.format(Locale.getDefault(), STATIC_URL_FORMAT, id));
+                            url = new URL(String.format(Locale.getDefault(), STATIC_URL_FORMAT_2, id));
                             break;
                         case ANIMATED:
-                            url = new URL(String.format(Locale.getDefault(), ANIMATED_URL_FORMAT, id));
+                            url = new URL(String.format(Locale.getDefault(), ANIMATED_URL_FORMAT_2, id));
                             break;
                         case POPUP:
-                            url = new URL(String.format(Locale.getDefault(), POPUP_URL_FORMAT, id));
+                            url = new URL(String.format(Locale.getDefault(), POPUP_URL_FORMAT_2, id));
                             break;
                         default:
                             continue;
