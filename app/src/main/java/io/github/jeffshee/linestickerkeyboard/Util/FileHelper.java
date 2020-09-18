@@ -26,18 +26,16 @@ public class FileHelper {
 
     public static void deleteFile(Context context, StickerPack stickerPack) {
         File pngDir = new File(context.getFilesDir(), "png");
-        for (int i = stickerPack.getFirstId(); i < stickerPack.getFirstId() + stickerPack.getCount(); i++) {
-            File file = new File(pngDir, i + ".png");
+        for (int id : stickerPack.getIds()) {
+            File file = new File(pngDir, id + ".png");
             if (!file.delete()) {
-                Log.d("FileHelper", i + ".png delete failed");
+                Log.d("FileHelper", id + ".png delete failed");
             }
-        }
-        if (stickerPack.getType() != Sticker.Type.STATIC) {
-            File gifDir = new File(context.getFilesDir(), "gif");
-            for (int i = stickerPack.getFirstId(); i < stickerPack.getFirstId() + stickerPack.getCount(); i++) {
-                File file = new File(gifDir, i + ".gif");
+            if (stickerPack.getType() != Sticker.Type.STATIC) {
+                File gifDir = new File(context.getFilesDir(), "gif");
+                file = new File(gifDir, id + ".gif");
                 if (!file.delete()) {
-                    Log.d("FileHelper", i + ".gif delete failed");
+                    Log.d("FileHelper", id + ".gif delete failed");
                 }
             }
         }

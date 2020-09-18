@@ -159,7 +159,6 @@ public class IMService extends InputMethodService {
     /* https://stackoverflow.com/questions/3494476/android-ime-how-to-show-a-pop-up-dialog
        https://stackoverflow.com/questions/51906586/display-dialog-from-input-method-service-in-android-9-android-pie
        NOTE: Might causing bug on Android 9
-       TODO: Confirmation Required
      */
 
     public void showSettingDialog() {

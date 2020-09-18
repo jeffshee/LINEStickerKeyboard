@@ -17,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -89,8 +91,8 @@ public class StickerKeyboardView extends LinearLayout implements View.OnClickLis
                 if (i == 0)
                     icon.setImageDrawable(getResources().getDrawable(R.drawable.baseline_history_white_36));
                 else {
-                    File file = FileHelper.getPngFile(imService, stickerPacksFiltered.get(i - 1).getFirstId());
-                    Glide.with(this).load(file).into(icon);
+                    File file = FileHelper.getPngFile(imService, stickerPacksFiltered.get(i - 1).getId(0));
+                    Glide.with(this).load(file).apply(new RequestOptions().signature(new ObjectKey(file.lastModified()))).into(icon);
                 }
                 TabLayout.Tab tab = tabLayout.getTabAt(i);
                 if (tab != null) tab.setCustomView(view);

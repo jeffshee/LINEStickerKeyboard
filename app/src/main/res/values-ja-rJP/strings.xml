@@ -27,7 +27,7 @@
     <string name="positive_agree">同意</string>
     <string name="negative_disagree">拒否</string>
     <string name="disclaimer">免責事項</string>
-    <string name="disclaimer_text">当アプリの使用は、使用者自身の自己責任でなされるものであり、当アプリは一切の責任を負いません。</string>
+    <string name="disclaimer_text">当アプリの使用は、使用者自身の自己責任でなされるものであり、当アプリは一切の責任を負いません</string>
     <string name="disclaimer_toast">免責事項に同意して下さい</string>
     <string name="fetch_fetching">取得中</string>
     <string name="fetch_downloading">ダウンロード中</string>
@@ -38,4 +38,8 @@
     <string name="fetch_convert_failed">変換失敗</string>
     <string name="force_png">スタンプを(A)PNGファイルとして送信されます</string>
     <string name="channel_name">ダウンロード</string>
+    <string name="use_fallback_url">フォルバックURLを使用</string>
+    <string name="use_fallback_url_description">ダウンロードが正常でない場合、このオプションを有効化してもう一度試してみてください</string>
+    <string name="manual_add_store_id">Manual Add by Store ID</string>
+    <string name="manual_add_store_id_description">ストアIDは、LINEストアのURLに表示される番号のことです。例えば：\n <b> URL：</b> https://store.line.me/stickershop/product/5271/en\n <b>ストアID：</b> 5271 \n詳細については、「使い方・このアプリについて」を参照してください</string>
 </resources>

@@ -17,8 +17,8 @@ public class HistoryAdapter extends BasePackAdapter {
     }
 
     @Override
-    protected File getStickerPng(Context context, int position) {
-        return FileHelper.getPngFile(context, historyPack.getId(position));
+    protected File getFile(Context context, int position) {
+        return FileHelper.getFile(context, historyPack.getSticker(position));
     }
 
     @Override

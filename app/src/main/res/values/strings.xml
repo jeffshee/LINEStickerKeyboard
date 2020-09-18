@@ -36,6 +36,10 @@
     <string name="share">Share via</string>
     <string name="manual_add">Manual Add</string>
     <string name="store_id">Store ID</string>
+    <string name="manual_add_store_id">Manual Add by Store ID</string>
+    <string name="manual_add_store_id_description">Store ID is the numbers that appear in the LINE Store\'s URL, for example:\n<b>URL:</b> https://store.line.me/stickershop/product/5271/en\n<b>Store ID:</b> 5271\nSee the \"About/How-to\" for more info</string>
+    <string name="use_fallback_url">Use fallback URL</string>
+    <string name="use_fallback_url_description">If the download didn\'t work, redo with this option enabled</string>
     <string name="positive_confirm">Confirm</string>
     <string name="negative_cancel">Cancel</string>
     <string name="clear_history">This will clear your sticker history</string>

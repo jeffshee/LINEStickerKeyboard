@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
@@ -26,9 +27,13 @@ public class SharedPrefHelper {
         if (json.equals("")) {
             stickerPacks = new ArrayList<>();
         } else {
-            stickerPacks = gson.fromJson(sharedPreferences.getString(KEY_STICKERS, null),
-                    new TypeToken<ArrayList<StickerPack>>() {
-                    }.getType());
+            try {
+                stickerPacks = gson.fromJson(sharedPreferences.getString(KEY_STICKERS, null),
+                        new TypeToken<ArrayList<StickerPack>>() {
+                        }.getType());
+            } catch (JsonSyntaxException e) {
+                stickerPacks = new ArrayList<>();
+            }
         }
         return stickerPacks;
     }
@@ -41,8 +46,13 @@ public class SharedPrefHelper {
         if (json.equals("")) {
             historyPack = new HistoryPack(new ArrayList<Sticker>());
         } else {
-            historyPack = gson.fromJson(sharedPreferences.getString(KEY_HISTORY, null),
-                    HistoryPack.class);
+            try {
+                historyPack = gson.fromJson(sharedPreferences.getString(KEY_HISTORY, null),
+                        HistoryPack.class);
+                if (historyPack == null) historyPack = new HistoryPack(new ArrayList<Sticker>());
+            } catch (JsonSyntaxException e) {
+                historyPack = new HistoryPack(new ArrayList<Sticker>());
+            }
         }
         return historyPack;
     }
@@ -52,7 +62,7 @@ public class SharedPrefHelper {
         stickerPacks = getStickerPacksFromPref(context);
         boolean isContain = false;
         for (StickerPack s : stickerPacks) {
-            if (s.getFirstId() == stickerPack.getFirstId()) {
+            if (s.getStoreId() == stickerPack.getStoreId()) {
                 isContain = true;
                 break;
             }
@@ -66,13 +76,8 @@ public class SharedPrefHelper {
 
     public static void cleanHistory(Context context, StickerPack stickerPackToDelete) {
         HistoryPack historyPack = getHistoryFromPref(context);
-        for (int i = 0; i < historyPack.size(); i++) {
-            if(historyPack.getId(i) >= stickerPackToDelete.getFirstId()
-                    && historyPack.getId(i) < stickerPackToDelete.getFirstId() + stickerPackToDelete.getCount()){
-                historyPack.remove(i);
-            }
-            saveNewHistoryPack(context, historyPack);
-        }
+        historyPack.removeAll(stickerPackToDelete.getIds());
+        saveNewHistoryPack(context, historyPack);
     }
 
     public static void addStickerToHistory(Context context, Sticker sticker) {
@@ -97,14 +102,14 @@ public class SharedPrefHelper {
         editor.apply();
     }
 
-    public static void saveDisclaimerStatus(Context context, boolean agree){
+    public static void saveDisclaimerStatus(Context context, boolean agree) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(KEY_DISCLAIMER, agree);
         editor.apply();
     }
 
-    public static boolean getDisclaimerStatus(Context context){
+    public static boolean getDisclaimerStatus(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
         return sharedPreferences.getBoolean(KEY_DISCLAIMER, false);
     }

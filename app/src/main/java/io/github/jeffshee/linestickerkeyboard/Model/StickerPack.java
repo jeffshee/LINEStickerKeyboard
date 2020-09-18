@@ -1,38 +1,40 @@
 package io.github.jeffshee.linestickerkeyboard.Model;
 
+import java.util.ArrayList;
+
 public class StickerPack {
-    private Sticker firstSticker;
-    private int count;
-    private int storeId;
     private String title;
+    private int storeId;
+    private Sticker.Type type;
+    private ArrayList<Integer> ids;
     private boolean visible;
 
-    public StickerPack(Sticker firstSticker, int count, int storeId, String title) {
-        this.firstSticker = firstSticker;
-        this.count = count;
-        this.storeId = storeId;
+    public StickerPack(String title, int storeId, Sticker.Type type, ArrayList<Integer> ids) {
         this.title = title;
+        this.storeId = storeId;
+        this.type = type;
+        this.ids = ids;
         this.visible = true;
     }
 
-    public int getFirstId() {
-        return firstSticker.getId();
+    public int getId(int index) {
+        return ids.get(index);
     }
 
-    public int getId(int index) {
-        return firstSticker.getId() + index;
+    public ArrayList<Integer> getIds() {
+        return ids;
     }
 
     public Sticker.Type getType() {
-        return firstSticker.getType();
+        return type;
     }
 
     public Sticker getSticker(int index) {
-        return new Sticker(firstSticker.getType(), firstSticker.getId() + index);
+        return new Sticker(type, ids.get(index));
     }
 
     public int getCount() {
-        return count;
+        return ids.size();
     }
 
     public int getStoreId() {
@@ -43,11 +45,11 @@ public class StickerPack {
         return title;
     }
 
-    public boolean getVisible(){
+    public boolean getVisible() {
         return visible;
     }
 
-    public void setVisible(boolean b){
+    public void setVisible(boolean b) {
         visible = b;
     }
 }

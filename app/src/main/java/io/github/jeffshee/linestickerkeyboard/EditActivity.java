@@ -21,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -93,11 +94,12 @@ public class EditActivity extends AppCompatActivity {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = getLayoutInflater().inflate(R.layout.dialog_editor, null);
         final EditText editText = view.findViewById(R.id.etId);
+        final Switch fallback = view.findViewById(R.id.switch_fallback);
         builder.setView(view)
                 .setPositiveButton(getString(R.string.positive_confirm), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        FetchService.startActionFetchManual(activity, Integer.parseInt(editText.getText().toString()));
+                        FetchService.startActionFetchManual(activity, Integer.parseInt(editText.getText().toString()), fallback.isChecked());
                         Toast.makeText(activity, getString(R.string.fetch_activity_toast), Toast.LENGTH_SHORT).show();
                     }
                 })

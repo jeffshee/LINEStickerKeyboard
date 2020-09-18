@@ -1,9 +1,10 @@
 package io.github.jeffshee.linestickerkeyboard.Model;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class HistoryPack {
-    private static final int MAX_SIZE = 50;
+    private static final int MAX_SIZE = 100;
     private ArrayList<Sticker> stickers;
 
     public HistoryPack(ArrayList<Sticker> history) {
@@ -11,17 +12,25 @@ public class HistoryPack {
     }
 
     public void add(Sticker sticker) {
-        for (int i = 0; i < stickers.size(); i++) {
-            if (sticker.equal(stickers.get(i))) stickers.remove(i);
-        }
+        stickers.remove(sticker);
         stickers.add(0, sticker);
         if (stickers.size() > MAX_SIZE) {
             stickers.remove(MAX_SIZE);
         }
     }
 
-    public void remove(int index){
+    public void remove(int index) {
         stickers.remove(index);
+    }
+
+    public void removeAll(ArrayList<Integer> ids) {
+        ArrayList<Sticker> removeList = new ArrayList<>();
+        for (Sticker sticker : stickers) {
+            if (ids.contains(sticker.getId())) {
+                removeList.add(sticker);
+            }
+        }
+        stickers.removeAll(removeList);
     }
 
     public int getId(int index) {
@@ -32,7 +41,7 @@ public class HistoryPack {
         return stickers.get(index).getType();
     }
 
-    public Sticker getSticker(int index){
+    public Sticker getSticker(int index) {
         return stickers.get(index);
     }
 

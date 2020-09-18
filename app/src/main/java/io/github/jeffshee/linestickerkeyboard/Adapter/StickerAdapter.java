@@ -24,8 +24,8 @@ public class StickerAdapter extends BasePackAdapter {
     }
 
     @Override
-    protected File getStickerPng(Context context, int position) {
-        return FileHelper.getPngFile(context, stickerPack.getId(position));
+    protected File getFile(Context context, int position) {
+        return FileHelper.getFile(context, new Sticker(stickerPack.getType(), stickerPack.getId(position)));
     }
 
     @Override

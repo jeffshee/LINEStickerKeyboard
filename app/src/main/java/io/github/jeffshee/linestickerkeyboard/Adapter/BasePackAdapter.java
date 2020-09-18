@@ -19,6 +19,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.signature.ObjectKey;
 
 import java.io.File;
 
@@ -50,9 +51,9 @@ public abstract class BasePackAdapter extends RecyclerView.Adapter {
         stickerViewHolder.itemView.setTag(getSticker(position));
         stickerViewHolder.textView.setText(R.string.loading);
         stickerViewHolder.textView.setTextColor(context.getResources().getColor(R.color.colorLoading));
-
-        RequestOptions requestOptions = new RequestOptions().error(R.drawable.error);
-        RequestBuilder<Drawable> requestBuilder = Glide.with(context).load(getStickerPng(context, position));
+        File png = getFile(context, position);
+        RequestOptions requestOptions = new RequestOptions().error(R.drawable.error).signature(new ObjectKey(png.lastModified()));
+        RequestBuilder<Drawable> requestBuilder = Glide.with(context).load(png);
         requestBuilder.listener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -89,7 +90,7 @@ public abstract class BasePackAdapter extends RecyclerView.Adapter {
     }
 
 
-    protected abstract File getStickerPng(Context context, int position);
+    protected abstract File getFile(Context context, int position);
 
     protected abstract Sticker getSticker(int position);
 

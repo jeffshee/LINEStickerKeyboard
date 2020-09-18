@@ -18,6 +18,8 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -52,8 +54,9 @@ public class ListAdapter extends RecyclerView.Adapter implements ItemTouchHelper
         final ListViewHolder stickerViewHolder = (ListViewHolder) viewHolder;
         stickerViewHolder.itemView.setTag(stickerPacks.get(i));
         stickerViewHolder.textView.setText(stickerPacks.get(i).getTitle());
-        File png = FileHelper.getPngFile(context, stickerPacks.get(i).getFirstId());
-        Glide.with(context).load(png).into(stickerViewHolder.imageView);
+        File png = FileHelper.getPngFile(context, stickerPacks.get(i).getId(0));
+        RequestOptions requestOptions = new RequestOptions().signature(new ObjectKey(png.lastModified()));
+        Glide.with(context).load(png).apply(requestOptions).into(stickerViewHolder.imageView);
         stickerViewHolder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
